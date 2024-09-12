@@ -1,0 +1,6 @@
+[book]
+authors = ["杨景 <yang.xunjing@qq.com>"]
+language = "zh-CN"
+multilingual = false
+src = "src"
+title = "使用 Rust 构建 gRPC 微服务"
