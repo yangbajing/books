@@ -1,5 +1,6 @@
-use crate::pb::getting::v1::{
-  auth_server::Auth, SigninRequest, SigninResponse, SignupRequest, SignupResponse, TokenType,
+use crate::{
+  grpc::SESSION_TOKEN,
+  pb::getting::v1::{auth_server::Auth, SigninRequest, SigninResponse, SignupRequest, SignupResponse, TokenType},
 };
 
 pub struct AuthService;
@@ -13,10 +14,7 @@ impl Auth for AuthService {
     let req = request.into_inner();
     println!("The signin request is {:?}", req);
 
-    let resp = SigninResponse {
-      access_token: "L1AhTRgFMiTkQMuGf8PnY6yHAmaV72ESQsEzo0cVWmiodIEx".to_string(),
-      token_type: TokenType::Bearer as i32,
-    };
+    let resp = SigninResponse { access_token: SESSION_TOKEN.to_string(), token_type: TokenType::Bearer as i32 };
     Ok(tonic::Response::new(resp))
   }
 

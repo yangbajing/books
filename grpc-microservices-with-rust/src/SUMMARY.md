@@ -23,6 +23,7 @@
 - [gRPC 和 Rust 快速入门](./ch03/index.md)
   - [Protocol Buffers](./ch03/protobuf.md)
   - [使用 tonic](./ch03/tonic.md)
+  - [拦截器和认证](./ch03/interceptor-authentication.md)
   - [维护 .proto 文件](./ch03/maintain-proto-file.md)
   - [兼容性](./ch03/compatibility.md)
   - [总结](./ch03/summarize.md)
