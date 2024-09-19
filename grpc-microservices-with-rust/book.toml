@@ -4,3 +4,9 @@ language = "zh-CN"
 multilingual = false
 src = "src"
 title = "使用 Rust 构建 gRPC 微服务"
+
+[rust]
+edition = "2021"
+
+[output.html]
+mathjax-support = true

@@ -1,0 +1,6 @@
+[package]
+name = "microservices-order"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]

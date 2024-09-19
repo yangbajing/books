@@ -1,0 +1,6 @@
+[package]
+name = "microservices-payment"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]

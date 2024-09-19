@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package microservices.v1;
+
+service Shipping {
+    rpc Create(CreateShippingRequest) returns (CreateShippingResponse){}
+}
+
+message CreateShippingRequest {
+    string address = 1;
+}
+
+message CreateShippingResponse {
+
+}
