@@ -1,0 +1,1143 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>使用 Rust 构建 gRPC 微服务</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="preface.html">前言</a></li><li class="chapter-item expanded affix "><li class="part-title">Part 1. gRPC 和微服务架构</li><li class="chapter-item expanded "><a href="ch01/index.html"><strong aria-hidden="true">1.</strong> Rust gRPC 微服务简介</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01/benefit.html"><strong aria-hidden="true">1.1.</strong> gRPC 微服务的优势</a></li><li class="chapter-item expanded "><a href="ch01/grpc-vs-rest.html"><strong aria-hidden="true">1.2.</strong> gRPC 与 REST</a></li><li class="chapter-item expanded "><a href="ch01/grpc-vs-graphql.html"><strong aria-hidden="true">1.3.</strong> gRPC 与 GraphQL</a></li><li class="chapter-item expanded "><a href="ch01/when-use-grpc.html"><strong aria-hidden="true">1.4.</strong> 何时使用 gRPC</a></li><li class="chapter-item expanded "><a href="ch01/production-use-case.html"><strong aria-hidden="true">1.5.</strong> 生产级用例</a></li><li class="chapter-item expanded "><a href="ch01/summarize.html"><strong aria-hidden="true">1.6.</strong> 总结</a></li></ol></li><li class="chapter-item expanded "><a href="ch02/index.html"><strong aria-hidden="true">2.</strong> gRPC 与微服务</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch02/monolithic.html"><strong aria-hidden="true">2.1.</strong> 单体架构</a></li><li class="chapter-item expanded "><a href="ch02/microservices.html"><strong aria-hidden="true">2.2.</strong> 微服务架构</a></li><li class="chapter-item expanded "><a href="ch02/service-discovery.html"><strong aria-hidden="true">2.3.</strong> 服务发现</a></li><li class="chapter-item expanded "><a href="ch02/interservice-communication.html"><strong aria-hidden="true">2.4.</strong> 使用 gRPC 进行服务间通信</a></li><li class="chapter-item expanded "><a href="ch02/summarize.html"><strong aria-hidden="true">2.5.</strong> 总结</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Part 2. 开发、测试和部署 gRPC 微服务</li><li class="chapter-item expanded "><a href="ch03/index.html"><strong aria-hidden="true">3.</strong> gRPC 和 Rust 快速入门</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03/protobuf.html"><strong aria-hidden="true">3.1.</strong> Protocol Buffers</a></li><li class="chapter-item expanded "><a href="ch03/tonic.html"><strong aria-hidden="true">3.2.</strong> 使用 tonic</a></li><li class="chapter-item expanded "><a href="ch03/interceptor-authentication.html"><strong aria-hidden="true">3.3.</strong> 拦截器和认证</a></li><li class="chapter-item expanded "><a href="ch03/maintain-proto-file.html"><strong aria-hidden="true">3.4.</strong> 维护 .proto 文件</a></li><li class="chapter-item expanded "><a href="ch03/compatibility.html"><strong aria-hidden="true">3.5.</strong> 兼容性</a></li><li class="chapter-item expanded "><a href="ch03/summarize.html"><strong aria-hidden="true">3.6.</strong> 总结</a></li></ol></li><li class="chapter-item expanded "><a href="ch04/index.html"><strong aria-hidden="true">4.</strong> 微服务项目设置</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04/hexagonal-architecture.html"><strong aria-hidden="true">4.1.</strong> 六边型架构</a></li><li class="chapter-item expanded "><a href="ch04/order-service.html"><strong aria-hidden="true">4.2.</strong> 订单服务</a></li><li class="chapter-item expanded "><a href="ch04/summarize.html"><strong aria-hidden="true">4.3.</strong> 总结</a></li></ol></li><li class="chapter-item expanded "><a href="ch05/index.html"><strong aria-hidden="true">5.</strong> 服务间通信</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05/grpc-interservice-communication.html"><strong aria-hidden="true">5.1.</strong> gRPC 服务间通信</a></li><li class="chapter-item expanded "><a href="ch05/product-payment-service.html"><strong aria-hidden="true">5.2.</strong> 其它服务：产品、支付</a></li><li class="chapter-item expanded "><a href="ch05/error-handling.html"><strong aria-hidden="true">5.3.</strong> 错误处理</a></li><li class="chapter-item expanded "><a href="ch05/summarize.html"><strong aria-hidden="true">5.4.</strong> 总结</a></li></ol></li><li class="chapter-item expanded "><a href="ch06/index.html"><strong aria-hidden="true">6.</strong> 弹性通信</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06/resilient-patterns.html"><strong aria-hidden="true">6.1.</strong> 弹性模式</a></li><li class="chapter-item expanded "><a href="ch06/deep-error-handling.html"><strong aria-hidden="true">6.2.</strong> 深入错误处理</a></li><li class="chapter-item expanded "><a href="ch06/securing-grpc-communication.html"><strong aria-hidden="true">6.3.</strong> 保护 gRPC 通信</a></li><li class="chapter-item expanded "><a href="ch06/summarize.html"><strong aria-hidden="true">6.4.</strong> 总结</a></li></ol></li><li class="chapter-item expanded "><a href="ch07/index.html"><strong aria-hidden="true">7.</strong> 测试微服务</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07/unit-testing.html"><strong aria-hidden="true">7.1.</strong> 单元测试</a></li><li class="chapter-item expanded "><a href="ch07/integration-testing.html"><strong aria-hidden="true">7.2.</strong> 集成测试</a></li><li class="chapter-item expanded "><a href="ch07/e2e-testing.html"><strong aria-hidden="true">7.3.</strong> 端到端测试</a></li><li class="chapter-item expanded "><a href="ch07/summarize.html"><strong aria-hidden="true">7.4.</strong> 总结</a></li></ol></li><li class="chapter-item expanded "><a href="ch08/index.html"><strong aria-hidden="true">8.</strong> 部署</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch08/docker.html"><strong aria-hidden="true">8.1.</strong> Docker</a></li><li class="chapter-item expanded "><a href="ch08/kubernetes.html"><strong aria-hidden="true">8.2.</strong> Kubernetes</a></li><li class="chapter-item expanded "><a href="ch08/certificate-management.html"><strong aria-hidden="true">8.3.</strong> 证书管理</a></li><li class="chapter-item expanded "><a href="ch08/deployment-strategies.html"><strong aria-hidden="true">8.4.</strong> 部署策略</a></li><li class="chapter-item expanded "><a href="ch08/summarize.html"><strong aria-hidden="true">8.5.</strong> 总结</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Part 3. 更进一步</li><li class="chapter-item expanded "><a href="ch09/index.html"><strong aria-hidden="true">9.</strong> gRPC 生态</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09/nextjs.html"><strong aria-hidden="true">9.1.</strong> 结合 Next.js</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">9.2.</strong> 总结</div></li></ol></li><li class="chapter-item expanded "><a href="ch09/index.html"><strong aria-hidden="true">10.</strong> 可观测性</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09/logging.html"><strong aria-hidden="true">10.1.</strong> 日志</a></li><li class="chapter-item expanded "><a href="ch09/metrics.html"><strong aria-hidden="true">10.2.</strong> 指标</a></li><li class="chapter-item expanded "><a href="ch09/tracing.html"><strong aria-hidden="true">10.3.</strong> 跟踪</a></li><li class="chapter-item expanded "><a href="ch09/summarize.html"><strong aria-hidden="true">10.4.</strong> 总结</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">使用 Rust 构建 gRPC 微服务</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="前言"><a class="header" href="#前言">前言</a></h1>
+<h2 id="本书的组织结构"><a class="header" href="#本书的组织结构">本书的组织结构</a></h2>
+<p>本书有 3 个部分，涵盖 9 个章节。</p>
+<h3 id="grpc-和微服务架构"><a class="header" href="#grpc-和微服务架构">gRPC 和微服务架构</a></h3>
+<p>在软件架构中，有三种类型的公司：那些对其单体应用感到满意的公司，那些计划切换到微服务的公司，以及那些已经在生产中使用微服务的公司。每个公司选择特定架构的原因各不相同，但使用微服务也带来了自身的一系列挑战。例如，当你决定将单体应用拆分为服务时，你需要弄清楚如何管理服务之间的通信。</p>
+<p>在第 1 部分，我们将首先查看电子商务应用的全貌，然后深入探讨微服务架构及其关键要求，如容错、安全性、持续集成/持续部署（CI/CD）、公共访问和扩展等。微服务之间适当的通信模式至关重要，我们也将讨论这个主题。</p>
+<p>我还将介绍 gRPC，并展示它如何适应微服务环境中的服务间通信。您将熟悉 gRPC，并看到它如何优先考虑安全性和性能，以为您提供无缝体验。</p>
+<h3 id="开发测试和部署-grpc-微服务应用程序"><a class="header" href="#开发测试和部署-grpc-微服务应用程序">开发、测试和部署 gRPC 微服务应用程序</a></h3>
+<p>在第 2 部分，我们将首先向您展示如何设置环境以便使用 Rust、gRPC 及相关工具来开发微服务应用程序。您还将学习如何构建项目结构，以便服务能够顺利集成。我们将介绍六边形架构，并逐步演示如何将其应用于您的微服务应用程序。</p>
+<p>一旦您构建了项目结构，我们将继续使用 gRPC 内置的客户端-服务器交互功能进行实际的通信模式。弹性对于稳定的服务至关重要，您将学习在服务间通信中从故障中恢复的技术。六边形架构使用层，我们将演示如何使用 Rust 为每一层编写单元测试和集成测试。</p>
+<p>完成应用程序开发后，您将了解 Kubernetes 基础知识，并熟悉其知名资源。您将学习如何使用这些资源将每个服务部署到 Kubernetes 环境中。这包括为公开安全和暴露您的应用程序采取适当的安全措施。</p>
+<h3 id="更进一步"><a class="header" href="#更进一步">更进一步</a></h3>
+<p>TODO</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="rust-grpc-微服务简介"><a class="header" href="#rust-grpc-微服务简介">Rust gRPC 微服务简介</a></h1>
+<p><strong>本章涵盖</strong></p>
+<ul>
+<li>介绍 Rust gRPC 微服务</li>
+<li>比较 gRPC 和 REST、GraphQL</li>
+<li>理解何时使用 gRPC</li>
+<li>将 gRPC 微服务应用于生产级用例</li>
+</ul>
+<p>良好的架构设计和适当的技术选择有助于通过消除重复工作并为软件开发和维护提供最佳工具包来确保高质量的产品。虽然微服务架构可以在任何语言中实现，但 Rust 特别适合构建高性能的云原生分布式应用程序，例如在 Kubernetes 上大规模运行的微服务。使用 gRPC 通信的微服务已经使许多公司能够基于其业务能力实施小型服务，并使这些服务能够与彼此及公众顺畅通信。在 Rust 的帮助下，由于其安全性、高性能、生成可执行二进制文件的能力以及其他许多原因，这些服务的分发变得更加容易，我们将在接下来的章节中通过实际案例详细了解这些原因。</p>
+<p>gRPC 是一个开源远程过程调用框架，最初由谷歌在 2015 年开发，帮助您连接服务，内置支持负载均衡、追踪、容错和安全性。该框架的主要优势在于能够为多种语言生成服务器和客户端存根（即，在客户端实现与服务相同方法的对象），这些存根可以在消费者项目中调用远程服务方法，也可以在服务器项目中定义这些服务方法背后的业务逻辑。</p>
+<p>微服务架构是一种服务导向架构，它将应用程序定义为松耦合、细粒度的服务，这些服务可以独立实现、部署和扩展。本书的主要目标是提供生产级的 gRPC 微服务最佳实践，以便在本书结束时，您能够自信地独立实现整个系统。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="grpc-微服务的收益"><a class="header" href="#grpc-微服务的收益">gRPC 微服务的收益</a></h1>
+<p>在典型的单体应用中，调用不同的业务活动，例如从结账服务调用支付服务，意味着访问一个单独模块中的类方法，这非常简单。如果使用微服务，这些调用将转换为网络通信。这可以是 TCP、HTTP 或事件队列调用，以在服务之间交换数据。处理网络调用比调用另一个类方法更具挑战性，后者可以通过简单的错误处理机制如 try-catch 块来管理。即使单体应用一开始也很容易使用，但出于多种原因，您可能需要对其进行拆分，包括缓慢的部署和低效的资源利用，这会影响功能开发和产品维护。这并不意味着单体应用不好，微服务就好；微服务也带来了挑战，我们将在第二章中详细讨论。在 gRPC 的帮助下，微服务中的大多数挑战，例如处理网络故障和将 TLS（传输层安全性）应用于服务通信（见第六章），都可以消除。 通过使用 gRPC 中的这些内置功能，可以提高产品的可靠性和整个团队的生产力。</p>
+<h2 id="性能"><a class="header" href="#性能">性能</a></h2>
+<p>gRPC 提供比其他协议更好的性能和安全性，例如使用 JSON 或 XML 通信的 REST，因为它使用 <code>protobuf</code> ，并且在 TLS 上使用 HTTP/2 非常简单。 <code>protobuf</code> ，也称为 Protobuf，是一种语言和平台中立的结构化数据序列化机制，您将在第 3 章中详细了解。这种机制使 gRPC 能够快速将消息序列化为小而紧凑的消息，适用于服务器和客户端。在同样的方式下，HTTP/2 通过服务器推送、多路复用和头部压缩来提升性能，我们将在第 5 章中更详细地讨论。</p>
+<h2 id="代码生成与互操作性"><a class="header" href="#代码生成与互操作性">代码生成与互操作性</a></h2>
+<p>假设您有一个结账服务和一个支付服务，允许客户结账一个购物篮，然后触发支付服务调用以支付购物篮中的产品。要访问支付服务，您需要在某个地方（例如共享库）拥有请求和响应模型，以便轻松访问它们。在微服务中重用共享请求和响应模型似乎很方便，但这并不是一个好的实践，特别是当您为每个微服务使用不同的语言时。在结账服务中复制模型，通常通过创建另一个数据类来构建请求对象并将响应对象反序列化，是一个更好的选择。这一切都是为了防止错误的抽象，正如您可能已经听过的那句话：“一点重复远比错误的抽象便宜”。还有一种更简单的方法：选择 gRPC 来定义您的消息并生成客户端存根，以便您可以注入这个依赖并在您喜欢的任何语言中直接使用它。我们将在第 3 更深入的讨论代码生成。</p>
+<p>gRPC 工具和库与多个平台和语言兼容，包括 Rust、Go、Java、Python、Typescript/Javascript、C# 等。Protobuf 二进制 wire 格式在网络中传输时，以及几乎所有平台的良好代码生成，使开发人员能够构建性能关键的应用程序，同时保留跨平台支持。我们将在第 3 章中详细了解 Protobuf 在服务间通信中表现良好的原因。</p>
+<p>gRPC 正在变得越来越流行（https://star-history.com/#grpc/grpc&amp;Date），因为您可以快速生成客户端存根，以在不同语言中提供服务的 SDK。您只需决定需要哪些业务对象。一旦选择了结账模型所需的字段，就可以引入相应的请求和响应消息。请记住，这些消息只是 IDL（接口定义语言）中的定义，与任何语言规范无关。在定义消息规范后，您可以生成特定语言的实现，以便任何消费者都可以依赖该源。这也意味着服务器端的开发语言可以与客户端不同，因为服务器端的方法可以作为存根在客户端生成，以支持 gRPC 的特定语言。</p>
+<p>除了业务对象，您还可以类似地定义服务方法并生成实现。这些服务函数可以在您初始化消费者端的 gRPC 客户端后调用；同样，这个客户端是开箱即用生成的。</p>
+<h2 id="容错性"><a class="header" href="#容错性">容错性</a></h2>
+<p>容错是系统在发生故障时继续运行的能力。幂等操作即使被调用多次也没有额外的效果。幂等性是成功的容错环境的关键，因为您需要确保在发生故障或未达到预期状态的情况下，重新尝试使用相同参数的操作不会改变实际资源的内容。例如，我们可能希望在响应时发生网络故障的情况下重试用户删除操作。如果该操作即使被调用多次也返回相同的结果，我们称该操作为幂等的。</p>
+<p>如果一个操作不适合幂等性用例，您必须在响应消息中提供适当的验证错误，以帮助您知道何时停止重试操作。一旦您保证了这种幂等性或适当的验证，这只是 gRPC 端重试策略的定义。容错还关注诸如速率限制、断路器和故障注入等主题，我们将在第六章中更详细地讨论这些内容。</p>
+<h2 id="安全"><a class="header" href="#安全">安全</a></h2>
+<p>在大多数系统中，您可能需要一个安全层来保护您的产品免受未验证来源的攻击。gRPC 鼓励使用 SSL/TLS 上的 HTTP/2 来验证和加密客户端与服务器之间交换的数据。更具体地说，您可以轻松地使用 SSL/TLS、ALTS（应用层传输安全）或基于令牌的身份验证系统来设置该身份验证系统，我们将在第六章中详细介绍。</p>
+<h2 id="流式传输streaming"><a class="header" href="#流式传输streaming">流式传输（Streaming）</a></h2>
+<p>有时您可能需要以分页的方式将响应数据分成几个块，以减少带宽并快速返回给用户。此外，如果用户只对特定页面感兴趣，同时返回所有数据是没有意义的。在 gRPC 中，除了分页，您还可以将这些数据流式传输给消费者，而不是强迫用户进行分页以迭代获取数据。流式传输不一定要在服务器端；它也可以在客户端，或者同时在双方进行，称为双向流式传输。在典型的流式传输用例中，您只需打开一次连接，数据就会通过这个打开的连接进行流式传输。您将在本书中看到不同类型的流式传输用例，特别是在第 5 章中，当我们实现一个完整的应用程序时。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="grpc-与-rest"><a class="header" href="#grpc-与-rest">gRPC 与 REST</a></h1>
+<p>REST（Representational State Transfer）是一种广泛采用的微服务协议。然而，如果您有严格的要求，例如低延迟、多语言系统支持等，您可能会考虑使用 gRPC。REST 基于 HTTP 1.x 协议，允许您在客户端和服务器之间以 JSON 或 XML 格式交换消息。另一方面，gRPC 基于 RPC（远程过程调用）架构，使用 <code>protobuf</code> 的二进制格式通过 HTTP 2.0 协议交换数据。这并不意味着 REST 与 HTTP 2.0 不兼容；您可以基于该协议设置自定义实现的 REST 服务，使其成为 gRPC 中的内置功能。</p>
+<p>由于 gRPC 内置了对 HTTP 2 的支持，您还可以在客户端和服务器之间使用单向和双向流，从而实现高速通信。使用 REST 服务的默认设置，多个客户端与服务器之间的通信可能会导致整体系统性能的延迟。</p>
+<p>在某些情况下，REST 比 gRPC 更有利。例如，REST 协议在各种浏览器中都得到支持。由于 gRPC 的支持较少，您可能需要使用代理层，例如 <a href="https://github.com/grpc/grpc-web">gRPC Web</a>，以便轻松与 gRPC 服务器进行通信。Tonic 提供了 gRPC Web 支持（可以在 <a href="https://github.com/hyperium/tonic/tree/master/tonic-web">tonic-web</a>了解更多信息），它允许你在一个服务中同时暴露 gRPC 服务端点和 REST 端点，这样就允许你省去部署一个单独的 grpcwebproxy 的开销。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="grpc-与-graphql"><a class="header" href="#grpc-与-graphql">gRPC 与 GraphQL</a></h1>
+<p>TODO</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="何时使用-grpc"><a class="header" href="#何时使用-grpc">何时使用 gRPC</a></h1>
+<p>TODO 修改示例！</p>
+<p>如果您对浏览器支持有严格要求，那么您需要考虑使用 REST，因为您最终会设置另一个层来在 HTTP/2 和 HTTP/1 之间进行转换。然而，您仍然可以使用 gRPC 进行服务间通信，并将 gRPC 负载均衡器（http://mng.bz/BmZ8）附加到该服务池，以便向公众公开 API 以实现 REST 兼容性，我们将在第 9 章中详细讨论。其他替代方案包括 Twirp（https://github.com/twitchtv/twirp），这是一个基于 Protobuf 构建的 RPC 框架。Twirp 允许您以一种方式为 gRPC 服务启用 REST 层，使您能够访问您的端点，如以下示例所示，该示例发送一个带有 JSON 有效负载的 POST 请求：</p>
+<pre><code>curl -X "POST" \
+      - H "Content-Type: application/json" \
+      -d '{"name": "dev-cluster"}' \
+      ➥ http://localhost:8080/twirp/github.com/huseyinbabal/microservices-
+      ➥ proto/cluster/Create
+</code></pre>
+<p>多语言开发环境非常适合 gRPC 集成，因为在结账服务中使用 Python 客户端访问用 Java 编写的支付服务非常简单，客户端存根生成使这一过程变得容易。您可以对公共消费者的 SDK 生成应用相同的策略。此外，每当您更改服务定义时，客户端的测试会失败，这为您的微服务提供了合适的验证机制。</p>
+<p>您将在第 7 章学习如何测试 gRPC 微服务。对于仅包含一到两个服务的简单应用程序，例如初创项目，gRPC 可能不是合适的选择，因为维护包含服务定义的 proto 文件并不容易，尤其是对于经验不足的用户。</p>
+<p>然而，在内部服务之间使用 gRPC 通信是可以接受的，但向客户公开 gRPC 接口可能并不理想，特别是当没有用于 gRPC 服务通信的客户端 SDK 时。如果您希望在不维护消费者 SDK 的情况下公开 gRPC，那么最好与他们共享您的服务定义或提供关于如何向您的 gRPC 服务发起 gRPC 调用的清晰说明。</p>
+<h2 id="本书适合谁"><a class="header" href="#本书适合谁">本书适合谁？</a></h2>
+<p>本书包含许多解释、代码示例以及由真实案例支持的技巧和窍门，这些对以下角色可能会有用：</p>
+<ul>
+<li>不懂 Rust 或微服务的开发者：他们可以从关于 Rust、微服务和 gRPC 的入门章节开始，学习 gRPC Rust 微服务的生产级技术。已经了解微服务架构的读者可以通过 Rust 中描述的资源来刷新他们的知识，这些资源可以轻松适应其他任何语言。</li>
+<li>工程经理：他们可以通过在其手册中添加最佳实践来提高团队开发人员的生产力。应用这些技术将为整个产品引入良好的可见性，这将有助于快速让新员工融入团队。</li>
+<li>软件架构师：有许多方便的示例和架构设计可以作为他们在新产品或功能决策时的潜在参考。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="生产级用例"><a class="header" href="#生产级用例">生产级用例</a></h1>
+<p>如图 1.1 所示，我们将在本书中尝试创建一个电子商务产品，使用 Rust gRPC 微服务，这些微服务在适当的 CI/CD 管道中自动化，并运行在 Kubernetes 环境中。在接下来的小节中，我们将访问图表的关键部分，以了解它们在典型开发生命周期中的重要性，gRPC 如何使这些部分更易于处理，以及使用哪些技术和在哪里使用。</p>
+<p>TODO 补充图 1.1</p>
+<h2 id="微服务"><a class="header" href="#微服务">微服务</a></h2>
+<p>微服务项目充满挑战，尤其是在项目初期，您常常会在架构决策会议上听到以下问题：</p>
+<ul>
+<li>让我们实施微服务，但它应该有多微小呢？</li>
+<li>我们需要基于哪种策略来构建和拆分服务？</li>
+</ul>
+<p>通过业务能力划分微服务是其中一个选项（http://mng.bz/rWnD），我们将在接下来的章节中关注实际用例并实施这一区分。如图 1.1 所示，我们有五个服务提供不同的业务功能，例如一个运输服务用于将产品运送给客户，以及一个支付服务用于在结账阶段使用购物车中的信息向客户的信用卡收费。共有五个业务能力：产品、购物车、结账、支付和运输。它们通过生成的存根连接（例如，结账使用运输 gRPC 存根调用运输服务函数）。</p>
+<p>单体到微服务的分解将用网络调用替代服务功能调用，这意味着您需要为服务间通信实现一个容错客户端。gRPC 提供了基本功能，如连接池和资源访问，以便在客户端使用其 gRPC 存根访问服务功能，前提是将自动生成的存根作为 Rust 依赖项添加到消费者服务中。如图 1.1 所示，结账服务可以调用购物车服务以获取购物车商品，调用运输服务以获取客户地址，以及调用支付服务以通过将分别生成的运输、购物车和支付服务的存根添加到结账服务中作为 Rust 依赖项来收取客户的信用卡费用。我们将在第 5 章详细讨论依赖管理；您将学习如何处理依赖关系以及如何在 CI（持续集成）管道中自动化生成它们。</p>
+<p>微服务架构为多语言开发环境打开了一扇大门，这对于为不同用例选择合适的语言非常有帮助。它还允许使用各种技术，例如在图相关用例中使用 Neo4j，如果需要关系表结构则使用 PostgreSQL，或者在基于文档的数据模型中使用 Mongo。微服务架构还帮助您构建不同的小团队，将代码所有权分配给特定的服务池。</p>
+<h2 id="容器"><a class="header" href="#容器">容器</a></h2>
+<p>管理应用程序环境可能不是一个真正的问题，如果你有一个单体应用程序，因为你可以将这个应用程序部署到一组虚拟机中，典型的负载均衡器处理流量。不充分的资源利用、扩展问题和风险部署促使人们转向微服务架构。然而，一旦你进行切换，由于每个服务都是独立的，你需要开始考虑一个需要适当管理的分布式环境。</p>
+<p>Kubernetes，一个开源容器编排平台，已经在应用部署管理和许多其他生产级用例中证明了自己。图 1.1 中显示的服务将都是云原生应用，并将为在 CI/CD 管道中使用定义 Kubernetes 部署规范。此外，每个服务将在容器内运行，并可以根据负载进行横向扩展。</p>
+<p>gRPC 需要一个服务器地址来拨打以调用服务功能。Kubernetes 的发现系统非常适合查找正确的地址，因为服务器地址是服务规范中定义的微服务的服务名称。假设您对服务有一个合适的命名约定。在这种情况下，消费者和服务之间也有完美的集成，无需依赖服务发现产品来查看特定服务的实际地址。</p>
+<p>每个服务可以有不同的行为，例如资源请求、缩放因子、语言运行时等。再次强调，它们只是 Kubernetes 部署中的配置，可以为每个服务进行适当配置。例如，假设产品服务需要比其他服务更多的容量或缩放因子，因为大多数客户在白天搜索和查看产品。您不需要像在单体应用程序中那样同时扩展 Kubernetes 中的所有服务。这可以通过为特定服务添加缩放因子和资源容量来处理。</p>
+<p>每个服务的主要输出将是一个云原生应用，这意味着您可以将此服务部署到任何其他容器运行时，例如 华为云 CCE、阿里云容器服务等，甚至用于本地开发的 Docker，只需稍作修改。</p>
+<h2 id="cicd"><a class="header" href="#cicd">CI/CD</a></h2>
+<p>在微服务环境中，有许多操作适合自动化。服务工件构建、特定语言的 gRPC 存根生成、测试、代码质量检查和服务部署都是一些众所周知的例子。对于这个分布式系统，自动化程度越高，开发生命周期中的压力就越小。</p>
+<p>您可以轻松使用 gRPC 工具在本地环境中生成存根，但在将更改推送到远程仓库时生成它们不是更好吗？您还可以生成工件，以便在将它们合并到主分支后将其部署到实验或稳定环境。现代版本控制系统（VCS）提供商，如 GitHub、GitLab 和 Gitee，已经具备这种集成，因此对于这种自动化级别，所需的自定义实现并不多。</p>
+<p>CI/CD 作业执行后绿色勾选并不意味着一切正常；应该有办法检查是否使用了正确的机制。良好的单元测试覆盖率；适当的集成测试以检查第三方集成，如 PostgreSQL、Kubernetes；服务间通信的合同测试；静态代码分析；以及漏洞检查是确保主分支代码库可靠的良好开端。</p>
+<p>在成功且可靠的代码库之后，可以生成并标记工件，以便部署到用户验收测试（UAT）环境，然后再部署到最终用户的生产环境。部署方法的一些最佳实践包括滚动升级、金丝雀部署和蓝绿部署。部署的主要目标是将工件（在我们的案例中是 Docker 镜像）交付到 Kubernetes 环境，并在需要时准备回滚。回滚操作的决定并不容易。然而，如果您有一个适当的监控系统，您可以跟踪错误率和用户反馈，以决定何时回滚或向当前版本引入热修复。</p>
+<h2 id="监控与可观察性"><a class="header" href="#监控与可观察性">监控与可观察性</a></h2>
+<p>监控是一种机制，允许团队观察和理解其系统的状态，而可观察性是一种机制，使团队能够调试其系统。可观察的系统主要通过指标、日志和追踪来实现。追踪上下文对于查看任何特定请求的生命周期至关重要，我们将在第 9 章中详细讨论。假设一个消费者使用 SDK 通过 API 网关访问 API。它将请求传播到四到五个下游服务以处理所有操作，然后返回给客户。成功的响应并不意味着一切都很好；如果在这个生命周期内存在延迟，那就不好。在检测到延迟后，可以通过按包含有用信息的追踪 ID 进行分组来分析请求流。请求和响应头中的追踪 ID 可以通过一个简单的中间件快速注入，我们将在第 9 章中详细介绍。</p>
+<p>监控是微服务架构中至关重要的一部分，因为一旦将单体应用程序分解为微服务架构，就必须引入解决方案以获得更好的可见性。服务级指标、整体延迟和服务间调用层次结构是您可能希望在监控仪表板中看到的一些解决方案。除了系统级指标外，服务的日志也是必要的，因为它们允许您跟踪应用程序级别的异常，例如错误率的增加。</p>
+<p>仪表板、面板和图表为您的系统提供了更好可观察性的良好开端。尽管如此，我们仍应专注于引入新指标并基于这些工具创建特定警报，以便在您离开仪表板时通知您。例如，Prometheus（https://prometheus.io），一个开源事件监控和警报工具，可以用于收集系统和应用程序指标，并可以基于这些指标配置新的警报，例如“当特定服务的内存使用百分比 &gt; 80 时通知一次。”日志也是良好的洞察来源，因为您可以实时计算错误率。您甚至可以在现代日志管理工具中（如 Elastic Stack（Elasticsearch、Logstash 和其他 Elastic 集成产品））基于日志模式创建警报配置。</p>
+<p>一个良好的监控设置可以提供服务与服务之间的通信以及服务与第三方集成的洞察。例如，可以检测到服务与数据库之间或服务与超出组织控制的第三方 API 之间的性能问题。</p>
+<h2 id="公开访问"><a class="header" href="#公开访问">公开访问</a></h2>
+<p>公开访问对您的产品和您业务的声誉至关重要。例如，如果用户可以向您的产品发送无限请求，这表明公开访问的架构设计不佳，因为没有限流系统的产品可能会导致服务器端资源耗尽，从而对性能产生负面影响。</p>
+<p>API 网关被广泛用于防止这些场景，通过遵循某些原则，例如快速建立适当的身份验证/授权系统，引入速率限制以限制用户的请求能力等等。如果您已经使用 Kubernetes，您可以通过内置功能来处理此问题，例如向 NGINX 控制器添加授权和速率限制配置；否则，您还有其他选择，例如使用 API 网关产品。</p>
+<p>资源命名也至关重要，因为它会影响产品文档的质量。如果对端点使用适当的命名，API 文档将更易于阅读，消费者也能更顺利地使用这些 API 端点。可选地，您可以为您的产品实现 SDK，以便消费者可以依赖该 SDK 功能，而不是尝试构造请求、将其发送到 API 端点并处理响应。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="小结"><a class="header" href="#小结">小结</a></h1>
+<ul>
+<li>gRPC 在服务间通信中表现良好，因为它使用二进制序列化数据，并通过 HTTP/2 协议进行传输。</li>
+<li>gRPC 允许您进行客户端流、服务器端流和双向流，这使您能够并行发送多个请求或接收多个响应。</li>
+<li>在 gRPC 微服务中，稳定的 client-server 交互很简单，因为有自动代码生成。</li>
+<li>REST 之所以受欢迎，主要是因为它广泛的浏览器支持，但您仍然可以使用 gRPC Web 代理（例如，https://github.com/grpc/grpc-web）进行 REST 到 gRPC 的转换。</li>
+<li>由于其安全性、高性能和高可移植性等，Rust 是云原生应用程序（如 Kubernetes 中的微服务）最好的语言之一。</li>
+<li>在 gRPC 中使用基于 SSL/TLS 的 HTTP/2 端到端加密连接消除了大多数微服务的安全隐患。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="grpc-适配微服务"><a class="header" href="#grpc-适配微服务">gRPC 适配微服务</a></h1>
+<p><strong>本章涵盖</strong></p>
+<ul>
+<li>比较微服务架构与单体架构的优缺点</li>
+<li>理解微服务架构中的通信模式</li>
+<li>分析服务发现机制</li>
+<li>应用 Rust 和 gRPC 后是如何提升可靠的服务间通信和开发生产力的</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="单体架构"><a class="header" href="#单体架构">单体架构</a></h1>
+<p>在单体架构中，单体应用的不同组件被组合成一个单层和统一的软件应用程序，包含用户界面、服务器和数据库模块，这些都在一个地方进行管理。单体架构在开发产品的初始版本时特别有帮助，因为它可以让您熟悉业务领域，而无需处理非功能性挑战。然而，建议您定期评估您的产品，以了解是否是时候转向微服务架构。现在我们知道单体架构的样子，让我们来看看它的优缺点。</p>
+<h2 id="开发"><a class="header" href="#开发">开发</a></h2>
+<p>所有现代 IDE 都旨在支持单体应用程序。例如，您可以在 IntelliJ IDEA（https://www.jetbrains.com/idea/）中打开一个多模块的 Maven 项目，或者使用 RustRover（https://www.jetbrains.com/rust/）、VSCode（https://code.visualstudio.com/） 创建一个模块化的 Rust 项目，您可以轻松地在代码库中打开和导航。</p>
+<p>然而，随着代码库的增长，问题可能会出现。例如，假设您在一个单体应用程序中有许多模块，并且您尝试同时打开它们。在这种情况下，可能会导致 IDE 过载，从而对生产力产生负面影响；如果您不需要其中的一些模块，打开它们全部也可能没有必要。</p>
+<p>此外，如果您的测试用例没有适当的隔离，那么每当您对代码库进行小的更改时，可能会运行所有测试。代码库越大，编译和测试的时间就越长。</p>
+<h2 id="部署"><a class="header" href="#部署">部署</a></h2>
+<p>部署单体应用意味着将独立的包或文件夹层次结构复制到服务器或容器运行时。然而，单体应用可能会成为持续部署中频繁部署的障碍，因为它们在合理的时间间隔内难以部署和测试。即使您只对特定组件进行了小的更改，也需要部署整个应用程序。例如，假设我们在负责发送新闻通讯的新闻通讯组件中引入了一个小的更改，我们希望将其测试并部署到生产环境中。我们需要运行所有测试，即使我们没有更改其他组件，如支付、订单等。同样，我们需要构建系统以生成一个工件，即使更改仅在新闻通讯组件中。</p>
+<p>然而，部署单体应用可能会带来更严重的问题，特别是当多个团队共享该应用时。其他团队引入的不稳定测试和损坏的功能可能会中断整个部署，您可能希望将其回滚。</p>
+<h2 id="扩展性"><a class="header" href="#扩展性">扩展性</a></h2>
+<p>单体应用可以通过将其放置在负载均衡器后面快速扩展，这使得客户端请求能够代理到物理服务器上的下游单体应用或容器运行时。然而，从成本的角度来看，这可能没有意义，因为这些应用是彼此的精确副本，即使您不需要所有组件以相同的优先级进行扩展。让我们看一个简单的例子，以更好地理解这个利用问题。</p>
+<p>假设您有一个需要 16 GB 内存的单体应用程序，其中 10 个模块中最关键的是客户服务。当您将这个单体应用程序扩展 2 倍时，您将得到 32 GB 的内存分配。假设自定义模块需要 2 GB 内存才能高效运行。难道不应该只将需要额外 2 GB 内存的客户模块扩展 2 倍，而不是 16 GB 吗？</p>
+<p>将单体应用模块分配给不同团队以快速实现功能是另一个具有挑战性的扩展问题。一旦决定使用单体架构，就意味着长期承诺于该技术栈。单体应用中的层紧密耦合，使用相同技术进行进程内调用以实现互操作性。作为开发者或架构师，尝试其他技术栈（当有新的技术栈可用时）将变得更加困难。接下来，让我们看看扩展的驱动因素。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="微服务架构"><a class="header" href="#微服务架构">微服务架构</a></h1>
+<p>微服务架构是一种将应用程序定义为服务集合的架构风格。这些应用程序主要具有以下特征：</p>
+<ul>
+<li>它们是松散耦合的，这使您能够创建高度可维护和可测试的服务。</li>
+<li>每项服务都可以独立部署和扩展。</li>
+<li>它们专注于业务能力的建设。</li>
+<li>每项服务或服务集都可以轻松分配给专门团队来负责代码所有权。</li>
+<li>不需要对技术栈进行长期承若。</li>
+<li>如果其中中一个服务发生故障，其它服务仍然可以继续使用。</li>
+</ul>
+<p>首先，您必须决定微服务架构是否适合您的产品架构。如前所述，从单体架构开始是一种最佳实践，因为它使您能够理解您的业务能力。一旦您开始遇到可扩展性问题、开发效率低下或发布周期较长，您可以重新评估您的环境，以查看功能分解是否适合您的应用程序。一旦您决定使用微服务架构，您可能会拥有独立可扩展的服务、在开发过程中仅包含特定上下文的小项目，以及由于更快的测试验证和小型发布工件而实现的更快部署。</p>
+<h2 id="处理数据一致性"><a class="header" href="#处理数据一致性">处理数据一致性</a></h2>
+<p>保持数据一致性对几乎任何类型的应用程序都是至关重要的。在单体架构中，数据一致性通常通过事务来确保。事务是一系列应成功完成的操作；如果其中任何一个操作失败，所有操作将自动回滚。为了保持数据一致性，事务首先开始，执行实际业务逻辑，然后在成功的情况下提交事务，或在失败的情况下回滚事务。举个例子，假设一旦执行 <code>Order :create()</code> 方法，它会调用一系列操作，例如 <code>Payment:create()</code> 和 <code>Shipping:start()</code> 。如果 <code>Payment</code> 和 <code>Shipping</code> 操作都成功，它将成功提交 <code>Order</code> 状态为 <code>SUCCESS</code> 。同样，如果 <code>Shipping</code> 操作失败，它将回滚 <code>Payment</code> 操作，并将 <code>Order</code> 操作标记为 <code>FAILED</code> （见图 2.2）。</p>
+<p>TODO 补充图示</p>
+<p>一个典型的事务可以用开始和提交/回滚这两个步骤来表示，在此期间，您开始一个事务并执行实际操作；然后，您可能会将数据提交到数据存储中或回滚整个操作。现在我们明白在单体架构中数据一致性可以很容易地处理，让我们看看在微服务架构中是如何处理的。</p>
+<h2 id="saga-模式"><a class="header" href="#saga-模式">Saga 模式</a></h2>
+<p>事务是应用程序中维护数据一致性的关键部分。在单体应用中，数据源位于同一应用程序中，但一旦切换到微服务架构，数据状态就分散在各个服务中。每个服务都有自己的数据存储，这意味着单个事务无法处理数据的一致性。要在分布式系统中实现数据一致性，您有两个选择：两阶段提交（2PC）和补偿事务（saga）。2PC 协调形成分布式原子事务的所有过程，并确定它们是应该提交还是中止。补偿事务是一系列本地事务，更新每个服务并发布另一个消息以触发下一个服务上的另一个本地事务。</p>
+<p>由于事务步骤跨越多个服务，因此无法通过注释或两行代码来处理。然而，已经有广泛使用的 saga 实践，因此您无需为您的用例重新发明轮子。基于编排和协调者的 saga 是服务间通信中最流行的模式，以确保数据的一致性。</p>
+<h2 id="基于编排choreography的-saga"><a class="header" href="#基于编排choreography的-saga">基于编排（Choreography）的 Saga</a></h2>
+<p>基于编排的长事务是一种模式，其中每个服务执行其本地事务并发布事件以触发下一个服务执行其本地事务。每当创建一个长篇故事时，可以通过以下模式完成：</p>
+<ul>
+<li>服务在事务完成后将结果返回给客户端。它接收一个事件以更新其领域对象，并发布成功或失败状态。</li>
+<li>一个事务被创建，客户端开始轮询下一个服务以获取成功或失败的响应。启动轮询的唯一标识符应在事务创建时直接返回。</li>
+<li>一个事务被创建，客户端使用长链接协议（如：WebSocket）连接，服务通过 WebSocket 协议将结果发送回去。一旦返回成功或失败的结果，则事务完成。</li>
+</ul>
+<p>现在让我们看看如何将这些符号之一应用于订单创建流程的实际用例。</p>
+<p>在典型的订单创建流程中，一个 saga 在 Order Service 中创建， <code>Order</code> 以 <code>PENDING</code> 状态创建。它在 <code>Order</code> 被持久化并被 Payment Service 消费后，发送一个名为 <code>ORDER_CREATED</code> 的事件，Payment Service 将尝试向客户收费并发送另一个事件： <code>PAYMENT_CREATED</code> 或 <code>PAYMENT_FAILED</code> 。如果失败， Order Service 将被通知， Order 将被标记为 <code>FAILED</code> 。如果成功， Shipping Service 将消费该事件并启动发货流程。最后，它将为失败或成功创建另一个事件，这将导致 Order 的状态被标记为 <code>FAILED</code> 或 <code>SUCCESS</code> 。图 2.3 显示了与基于编排的 saga 的通信的高级图示。</p>
+<p>TODO 补充图示</p>
+<p>服务通信通过队列可以通过两种方式处理：</p>
+<ol>
+<li>命令通道（Command Channel）：发布者直接向下一个服务发送一条消息，带有一个 replyToChannel 参数，以便在完成操作并提交事务后通知消费者。该模式的主要缺点是发布者需要知道下一个服务的位置。</li>
+<li>发布/订阅（Pub/Sub）：发布者发布一个领域事件，感兴趣的消费者可以消费消息以处理并提交本地事务。该表示法的主要缺点是可能存在单点故障，因为所有订阅者使用一个代理技术，所有事件都发送给消费者。</li>
+</ol>
+<p>让我们看看如何使用命令通道表示法：需要额外信息的异步通信，以决定下一步该做什么。除了构成实际数据的字段外，还注入了一个特定字段，称为 replyTo 通道，以便消费者服务可以将结果发送回该通道。将一些关联 ID 添加到这些事件中也是最佳实践，以便查看特定事件系列的整体情况，如图 2.4 所示</p>
+<p>TODO 补充图示</p>
+<p>这种通信在另一种微服务通信模式中被广泛使用，称为基于协调的长事务。让我们来看看这种模式，以了解在微服务架构中如何保证数据一致性。</p>
+<h2 id="基于协调orchestrator的-saga"><a class="header" href="#基于协调orchestrator的-saga">基于协调（Orchestrator）的 Saga</a></h2>
+<p>让我们重新设计订单服务的创建流程，以使用基于协调的 saga 模式创建一个订单 saga。基于协调的 saga 由一个协调者和参与者组成，协调者告诉参与者该做什么。协调者可以使用命令通道或请求/响应方式与参与者进行通信。它单独连接参与者，告诉他们执行本地事务，并根据该响应决定下一步。</p>
+<p>每当您向订单服务发送创建订单请求时，它会启动一个负责执行一系列步骤以完成操作的事务。当它调用支付服务向客户收取特定订单的费用时，它可以返回成功或失败。如果返回成功，创建订单事务将继续进行下一步，在我们的案例中是发货。如果在支付服务中失败，事务将执行补偿交易以撤销操作，这一步是退款。如果创建订单事务成功执行所有步骤，订单状态将被保存为成功。请记住，如果事务在任何特定步骤失败，它将从底部向上执行补偿交易。例如，如果在发货时失败，它将执行 <code>Payment:refund()</code> 和 <code>Order:cancel()</code> ，例如订单创建的回滚操作，如图 2.5 所示。</p>
+<p>TODO 补充图示</p>
+<p>我们将使用请求/响应的方式来完成跨服务通信的事务流。每个服务都应该知道所有其他服务的地址以便连接。让我们更仔细地看看服务在微服务架构中如何相互发现。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="服务发现"><a class="header" href="#服务发现">服务发现</a></h1>
+<p>服务发现是管理和公开服务位置的操作，以便让每个服务找到下一个服务进行步骤执行。服务发现有两种类型：</p>
+<ul>
+<li>客户端服务发现：在这种表示法中，服务发现工具允许应用程序在启动时报告其位置，如图 2.6 所示。客户端应用程序与服务注册表有直接连接，它们通过提供一些标准，如服务名称或唯一标识符，来查询特定服务的位置。
+TODO 补充图示</li>
+<li>服务端服务发现：负载均衡器与服务注册中心集成，以解析下游服务。客户端应用程序通过负载均衡器连接到服务，而不是使用服务注册中心来解析确切位置，如图 2.7 所示。
+TODO 补充图示</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="使用-grpc-进行服务间通信"><a class="header" href="#使用-grpc-进行服务间通信">使用 gRPC 进行服务间通信</a></h1>
+<p>gRPC 是一种现代的、轻量级的通信协议和高性能的 RPC 框架，由 Google 引入。它可以有效地连接微服务环境中的服务，内置支持负载均衡、追踪、健康检查和身份验证。gRPC 使用 <code>protobuf</code> 提供易于使用和高效的通信， <code>protobuf</code> 是一种用于序列化结构化数据的开源机制。让我们使用自动生成的 Rust 代码来考虑使用 gRPC 和 <code>protobuf</code> 使服务相互通信（即交换消息）的最小步骤。</p>
+<h2 id="使用-protobuf"><a class="header" href="#使用-protobuf">使用 protobuf</a></h2>
+<p>让我们重新审视订单创建流程，以使用 gRPC 和 <code>protobuf</code> 进行服务间通信。理想的步骤如下：</p>
+<ol>
+<li>定义包含消息和服务描述的 <code>proto</code> 文件。这些文件可以在当前项目中定义，也可以在一个单独的代码库中进行维护。</li>
+<li>从 <code>.proto</code> 文件生成客户端和服务端存根。</li>
+<li>通过使用支持的语言之一（https://www.grpc.io/docs/languages/）实现服务端业务逻辑。</li>
+<li>实现客户端业务逻辑，并通过客户端存根连接服务。</li>
+<li>运行服务端和客户端。</li>
+</ol>
+<p>任何 <code>.proto</code> 文件都有消息定义和服务函数的共同点。消息可能指的是请求对象、响应对象，以及微服务环境中典型服务常用的枚举。例如，支付服务将有一个 <code>CreatePaymentRequest</code> 消息供订单服务使用。同样， <code>CreatePaymentResponse</code> 可以返回 <code>bill_id</code> 给订单服务，以将其作为订单服务实体中的一个单独字段存储。仅有这些消息是不够的，因此我们需要定义服务以使用这些请求和响应消息。 <code>Create</code> 服务函数可以将 <code>CreatePaymentRequest</code> 作为函数参数，并返回 <code>CreatePaymentResponse</code> 作为函数返回签名。这些服务函数的输入和输出参数很重要，因为它们直接影响客户端的可用性：</p>
+<pre><code class="language-protobuf">message CreatePaymentRequest {
+    int user_id = 1;
+    float64 price = 2;
+}
+
+message CreatePaymentResponse {
+    int bill_id = 1;
+}
+
+service Payment {
+    RPC Create(CreatePaymentRequest)
+    returns (CreatePaymentResponse) {}
+}
+</code></pre>
+<p>Payment 和 Shipping 存根可以通过 <code>protobuf</code> 编译器为多种语言轻松生成，以便任何服务，例如订单，可以像图 2.8 所示那样使用它们 , 。例如，订单服务可以在 Payment 存根中调用 Create 函数，该函数使用 gRPC 协议访问 Payment 中的实际服务端点。 protoc 用于从 <code>protobuf</code> 描述文件生成 Go 源代码。在这种情况下， CreatePaymentRequest 和 CreatePaymentResponse 消息将被编译为 Rust 结构体，以用于数据交换操作，进行请求和响应的序列化/反序列化（图 2.8）。在这里，序列化意味着将 Golang 结构体转换为字节数组。您可以在这里查看内部实现：http://mng.bz/AoVK。</p>
+<p>TODO 补充图示</p>
+<p>现在我们了解了如何使用 <code>protobuf</code> 来定义服务合同（第 3 章将有更深入的讨论），让我们看看如何通过使用 .proto 文件生成源代码。</p>
+<h2 id="生成-rust-代码"><a class="header" href="#生成-rust-代码">生成 Rust 代码</a></h2>
+<p><code>protobuf</code> 编译器（<code>protc</code>），是一个使用 <code>.proto</code> 文件生成特定语言的客户端和服务端实现的工具。我们将在第 3 章详细讨论 <code>.proto</code> 文件的使用，现在假设以下支付服务的 <code>proto</code> 定义：</p>
+<pre><code class="language-protobuf">syntax = "proto3";                        ❶
+
+package microservice.v1;                  ❷
+
+message CreatePaymentRequest {
+    float price = 1;
+}
+
+message CreatePaymentResponse {
+    int64 bill_id = 1;
+}
+
+service Payment {
+    RPC Create(CreatePaymentRequest) returns (CreatePaymentResponse) {}
+}
+</code></pre>
+<ol>
+<li><code>protobuf</code> 版本</li>
+<li>protobuf 包名，消息和服务均在此包名空间下</li>
+</ol>
+<p>可以使用 <a href="https://crates.io/crates/tonic-build">tonic-build</a> 来自动化生成该 <code>.proto</code> 文件的客户端和服务端 Rust 代码。</p>
+<pre><code class="language-toml">[dependencies]
+tonic = { version = "0.12" }
+
+[dev-dependencies]
+tonic-build = { version = "0.12" }
+</code></pre>
+<p>在项目根目录下创建 <code>build.rs</code> 文件，并添加以下内容：</p>
+<pre><pre class="playground"><code class="language-rust edition2021">fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    tonic_build::compile_protos("src/ch02/payment.proto")?;
+    Ok(())
+}</code></pre></pre>
+<p>运行 <code>cargo build</code> 时，会自动运行 <code>build.rs</code> 文件，生成 <code>src/ch02/payment.rs</code> 文件。</p>
+<p>TODO 修改并完善 cargo 项目配置</p>
+<p>这个示例是一个简单的请求/响应风格，称为单一 RPC，将生成所有的 Rust 代码并将其放置在相对于输入 .proto 文件的位置。gRPC 还允许您在客户端和服务器端使用流式传输。要实现流式响应，您可以在 .proto 文件中修改您的服务函数：</p>
+<pre><code class="language-protobuf">service Payment {
+    RPC CreateStream(CreatePaymentRequest) returns (stream CreatePaymentResponse) {}
+}
+</code></pre>
+<p>流式传输允许服务器端将数据拆分并逐部分返回给客户端。服务器根据客户端的请求返回一系列 <code>CreatePaymentResponse</code> 。一旦服务器发送完所有消息，它还会向客户端发送一些元数据，以表明服务器端的流式操作已完成。客户端在看到此状态后完成其操作。</p>
+<p>服务器端流式传输在服务器需要向客户端返回大量数据时是有益的。流式传输也可以在客户端发生。例如，支付请求以流式模式发送到服务器。服务器不需要发送多个消息，而是可以返回一条消息，报告所有支付创建操作的响应及其状态：</p>
+<pre><code class="language-protobuf">service Payment {
+    RPC CreateStream(stream CreatePaymentRequest) returns (CreatePaymentResponse) {}
+}
+</code></pre>
+<p>双向流式传输是指在客户端和服务器端同时进行流式传输。它允许客户端持续向服务器发送请求，服务器可以以对象流的形式返回结果。由于该操作是异步处理的，因此最好提供一个唯一标识符来标记哪个操作失败。</p>
+<pre><code class="language-protobuf">service Payment {
+    RPC CreateStream(stream CreatePaymentRequest) returns (stream CreatePaymentResponse) {}
+}
+</code></pre>
+<p>我们将在第 5 章详细讨论这个概念。</p>
+<h2 id="连接服务"><a class="header" href="#连接服务">连接服务</a></h2>
+<p>client-server 通信意味着在微服务环境中的服务到服务通信。服务是一个典型的消费者，使用另一个服务的客户端存根。在我们的案例中，如果您想将订单服务连接到支付服务，请完成以下步骤：</p>
+<ol>
+<li>将 payment 服务客户端存根作为领导导入 order 服务。</li>
+<li>通过从 order 服务连接 payment 服务。我们可以通过服务发现来获取 payment 服务的地址。</li>
+<li>使用创建的连接对象创建一个 payment 客户端。</li>
+<li>调用 <code>Payment</code> 客户端上的 <code>Create</code> 方法。</li>
+</ol>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// TODO 补充代码清单
+<span class="boring">}</span></code></pre></pre>
+<p>在列表 2.2 中，我们初始化一个连接到地址并将其作为参数传递给 <code>PaymentClient</code> 。请注意，我们使用 Rust 的 RAII 机制（<code>Drop</code>）以确保在应用程序关闭后连接被正确关闭。我们不关心在连接到两个服务时底层通信是如何处理的。一切都被抽象为一个客户端实例，该实例由 <code>tonic-build</code> 自动生成到 Rust 中。</p>
+<p><code>protobuf</code> 编译器还生成了一个客户端实现，命名约定为 New&lt;Service_Name&gt;Client ，这样您就可以为特定服务的客户端创建一个新的引用（例如， NewPaymentClient ）。当您调用客户端存根时，它可以返回成功或失败。为了实现可靠的通信，最好根据某些标准重试失败的请求。同样，最好为此执行提供超时，以便在客户端无法在请求的时间间隔内看到响应时使操作失败。这些最佳实践都是为了使数据更加一致。如果您有一个处于待处理状态的订单对象，它在那里停留了几个小时，这就是不正确的通信模式的标志。正如您在最后一个示例中看到的，尽管我们没有在 .proto 文件中明确定义，但仍然有一个 ctx 参数。Protobuf 编译器只是向所有服务函数添加了一个上下文参数，以允许消费者传递其上下文对象的引用。例如，如果您在 10 秒内没有获得结果，可以使用以下代码取消执行：</p>
+<p>TODO 上面需要更新为 Rust 代码示例</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="总结"><a class="header" href="#总结">总结</a></h1>
+<ul>
+<li>单体架构在产品实施初期是有帮助的，但在评估产品的可扩展性、开发和部署问题后，切换到微服务架构是最佳实践，然后熟悉您的业务能力和服务上下文。</li>
+<li>定期评估您的产品可以帮助您决定是否切换到微服务架构是合理的（根据规模立方体的功能分解）。</li>
+<li>Pub/Sub 或 Command Channel 机制是异步通信的例子，而 Request/Response 风格是同步通信的例子（例如，gRPC）。</li>
+<li>基于编排（Choreography）和协调者（Orchestrator）的 Saga 模式在分布式环境中提供数据一致性。</li>
+<li>protobuf 帮助我们定义消息和服务功能，通过使用 protobuf 编译器（protoc）生成服务端和客户端存根。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="grpc-和-rust-快速入门"><a class="header" href="#grpc-和-rust-快速入门">gRPC 和 Rust 快速入门</a></h1>
+<p><strong>本章涵盖</strong></p>
+<ul>
+<li>使用 protobuf（protocol buffers）</li>
+<li>从 <code>.proto</code> 文件生成存根</li>
+<li>在 单独的代码库中维护 <code>.proto</code> 文件</li>
+<li>维护 protobuf 的向后和向前兼容性</li>
+</ul>
+<p>两个服务之间的通信就像两个人在交谈：人们使用电话进行连接，而 gRPC 在服务间通信中也起着同样的作用。正如人们使用语言来相互理解，两个服务使用 <code>protobuf</code> 来交换消息。选择合适的通信方式对于建立有效的关系至关重要。既然我们理解了这一重要的通信策略，让我们看看 <code>protobuf</code> 和 gRPC 如何在微服务通信中一起使用。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="protocol-buffers"><a class="header" href="#protocol-buffers">Protocol Buffers</a></h1>
+<p><code>protobuf</code> 允许您序列化结构化数据以通过网络传输。您还可以定义服务函数并生成特定语言的源代码。消息和服务函数的定义写在一个名为.proto 的配置文件中，该文件还包含我们将在本书中使用的协议的版本信息（proto3）。还有两个其他版本：proto1，已被弃用，以及 proto2。proto3 发布的主要动机是简化 proto2 中使用的语法。（有关 proto3 和 proto2 的详细比较，请参见 https://www.hackingnote.com/en/versus/proto2-vs-proto3。）您在第 2 章中已经看到一个示例消息，所以这次我们深入探讨一下。</p>
+<h2 id="定义消息类型"><a class="header" href="#定义消息类型">定义消息类型</a></h2>
+<p>TODO</p>
+<h2 id="protobuf-编码"><a class="header" href="#protobuf-编码">protobuf 编码</a></h2>
+<p><code>protobuf</code> 编码的主要目标是将 .proto 文件内容转换为二进制格式，以便通过网络发送。 <code>protobuf</code> 编译器使用一组规则将消息转换为二进制格式，以便在数据的封送（序列化）、发送（通过网络）和解封送（反序列化）过程中获得更好的性能。让我们分析下面的示例，看看 <code>protobuf</code> 编码在背后是如何工作的。</p>
+<p>该 CreateOrderRequest 消息只有一个字段， user_id ，类型为 int , ，字段编号为 1 。我们编译了该消息并在我们的生产代码中使用了它：</p>
+<pre><code class="language-protobuf">// order.proto
+message CreateOrderRequest {
+    int64 user_id = 1;
+}
+</code></pre>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>TODO
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="使用-tonic"><a class="header" href="#使用-tonic">使用 tonic</a></h1>
+<p>gRPC Stub 是一个作为 gRPC 客户端接口的模块。您可以使用这些存根执行多项操作，例如通过流式或非流式表示法连接和交换数据。 <code>protobuf</code> 编译器为指定语言生成源代码，而该源代码包含所有存根。您可以将生成的源代码导入客户端和服务器端，以通过遵循接口中定义的合同来实现业务逻辑。</p>
+<h2 id="创建项目"><a class="header" href="#创建项目">创建项目</a></h2>
+<h3 id="初始化配置-grpc-项目"><a class="header" href="#初始化配置-grpc-项目">初始化配置 gRPC 项目</a></h3>
+<p>打开命令行终端，依次输入以下指令创建 gRPC 项目：</p>
+<pre><code class="language-sh">cargo new tonic-getting
+cd tonic-getting
+# 若找不到 cargo `add` 命令请安装：`cargo install cargo-edit`。
+cargo add tonic prost anyhow
+cargo add --build tonic-build
+</code></pre>
+<h3 id="创建-proto-文件"><a class="header" href="#创建-proto-文件">创建 proto 文件</a></h3>
+<p>创建 <code>proto</code> 目录存放 protocol buffers 文件定义。添加以下内容到文件 <code>proto/getting/v1/auth.proto</code> 中：</p>
+<pre><code class="language-protobuf">syntax = "proto3";
+
+package getting.v1;
+
+service AuthService {
+  rpc Signin(SigninRequest) returns (SigninResponse) {}
+  rpc Signup(SignupRequest) returns (SignupResponse) {}
+}
+
+enum TokenType {
+  TOKEN_TYPE_UNSPECIFIED = 0;
+  TOKEN_TYPE_BEARER = 1;
+}
+
+message SigninRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message SigninResponse {
+  string access_token = 1;
+  TokenType token_type = 2;
+}
+
+message SignupRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message SignupResponse {
+}
+</code></pre>
+<h3 id="使用-buildrs-自动化编译-proto-存根代码"><a class="header" href="#使用-buildrs-自动化编译-proto-存根代码">使用 <code>build.rs</code> 自动化编译 proto 存根代码</a></h3>
+<p>创建 <code>build.rs</code> 文件自动编译 <code>*.proto</code> 并生成 Rust 存根代码。</p>
+<pre><pre class="playground"><code class="language-rust edition2021">fn main() {
+    println!("cargo::rerun-if-changed=proto/getting/**/*");
+
+    tonic_build::configure()
+        .compile(&amp;["proto/getting/v1/auth.proto"], &amp;["proto"])
+        .unwrap();
+}</code></pre></pre>
+<p>正确完成这些步骤后，<code>cargo</code> 将自动编译 .proto 文件并生成 Rust 存根代码，生成的代码默认并存放在 <code>target/debug/build/tonic-getting-bbf494a1a6da115c/out/getting.v1.rs</code>（注：你看到的具体的路径可能不一样，注意16进制字符串那部分可能会不同）。</p>
+<h3 id="测试-protocol-buffer-消息"><a class="header" href="#测试-protocol-buffer-消息">测试 protocol buffer 消息</a></h3>
+<p>创建 <code>src/lib.rs</code> 文件，并添加如下内容：</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub mod pb;
+<span class="boring">}</span></code></pre></pre>
+<p>创建对应的 <code>pb</code>（文件：<code>src/pb.rs</code>）模块，并添加如下内容：</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub mod getting {
+    pub mod v1 {
+        tonic::include_proto!("getting.v1");
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>修改 <code>main.rs</code> 文件如下：</p>
+<pre><pre class="playground"><code class="language-rust edition2021">use tonic_getting::pb::getting::v1::SigninRequest;
+
+fn main() {
+    let signin_req = SigninRequest {
+        email: "yangbajing@gmail.com".to_string(),
+        password: "Password.2024".to_string(),
+    };
+    println!("Signin request is {:?}", signin_req);
+}</code></pre></pre>
+<p>执行命令 <code>cargo run -q</code> 运行程序，可以正常输出由 protobuf 定义的消息结构体 <code>SigninRequest</code> 的内容。</p>
+<pre><code class="language-sh">Signin request is SigninRequest { email: "yangbajing@gmail.com", password: "Password.2024" }
+</code></pre>
+<h3 id="配置-rust-analyzer-分析-buildrs-生成的文件"><a class="header" href="#配置-rust-analyzer-分析-buildrs-生成的文件">配置 <code>rust-analyzer</code> 分析 <code>build.rs</code> 生成的文件</a></h3>
+<p>默认情况下，<code>rust-analyzer</code> 不会分析 <code>build.rs</code> 生成的文件（更准确的说是不会解析在标准源码目录之外的 <code>.rs</code> 文件，如：<code>src</code>、<code>examples</code>、<code>test</code>）。可以通过修改 <code>.vscode/settings.json</code> 文件添加 VSCode 配置来启用对 <code>build.rs</code> 生成的文件的分析。</p>
+<pre><code class="language-json">{
+  "rust-analyzer.cargo.buildScripts.enable": true,
+}
+</code></pre>
+<p>重启 <code>rust-analyzer server</code> 后，就可以通过 <code>F2</code>（或者 <code>Ctrl/CMD + 鼠标点击</code>）跳转到生成的代码定义位置。</p>
+<h2 id="定义-grpc-服务"><a class="header" href="#定义-grpc-服务">定义 gRPC 服务</a></h2>
+<p>接下来定义 gRPC 服务并启动它。我们先创建一个 <code>src/grpc.rs</code> 模块，并添加如下代码：</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use crate::pb::getting::v1::{
+    auth_server::Auth, SigninRequest, SigninResponse, SignupRequest, SignupResponse, TokenType,
+};
+
+pub struct AuthService;
+
+#[tonic::async_trait]
+impl Auth for AuthService {
+    async fn signin(
+        &amp;self,
+        request: tonic::Request&lt;SigninRequest&gt;,
+    ) -&gt; Result&lt;tonic::Response&lt;SigninResponse&gt;, tonic::Status&gt; {
+        let req = request.into_inner();
+        println!("Signin request is {:?}", req);
+
+        let resp = SigninResponse {
+            access_token: "".to_string(),
+            token_type: TokenType::Bearer as i32,
+        };
+        Ok(tonic::Response::new(resp))
+    }
+
+    async fn signup(
+        &amp;self,
+        request: tonic::Request&lt;SignupRequest&gt;,
+    ) -&gt; Result&lt;tonic::Response&lt;SignupResponse&gt;, tonic::Status&gt; {
+        let req = request.into_inner();
+        println!("Signup request is {:?}", req);
+
+        let resp = SignupResponse {
+            code: 0,
+            ..Default::default()
+        };
+        Ok(tonic::Response::new(resp))
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>添加 <code>tokio</code> 依赖：</p>
+<pre><code class="language-sh">cargo add tokio --features full
+</code></pre>
+<p>然后再次修改 <code>main.rs</code> 文件，添加 gRPC 启动服务：</p>
+<pre><pre class="playground"><code class="language-rust edition2021">use tonic::transport::Server;
+use tonic_getting::{grpc::AuthService, pb::getting::v1::auth_server::AuthServer};
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+  let grpc_addr = "0.0.0.0:9999".parse()?;
+  println!("The gRPC Server listening to {}", grpc_addr);
+  Server::builder()
+    .add_service(AuthServer::new(AuthService)) // 添加 Auth gRPC Service
+    .serve(grpc_addr).await?; // 绑定到指定网络地址并启动 gRPC 服务
+  Ok(())
+}</code></pre></pre>
+<p>我们在命令行终端输入 <code>cargo run -q</code> 启动服务。然后再打开另一个命令行终端，并使用 <code>grpcurl</code> 来测试服务：</p>
+<pre><code class="language-sh">grpcurl -plaintext -import-path ./proto \
+  -proto getting/v1/auth.proto \
+  -d '{
+    "email": "yangbajing@gmail.com",
+    "password": "Password.2024"
+  }' \
+  localhost:9999 getting.v1.Auth/Signin
+# 下面是输出内容。
+{
+  "accessToken": "L1AhTRgFMiTkQMuGf8PnY6yHAmaV72ESQsEzo0cVWmiodIEx",
+  "tokenType": "TOKEN_TYPE_BEARER"
+}
+</code></pre>
+<h2 id="protobuf-package-与-rust-mod-的映射关系"><a class="header" href="#protobuf-package-与-rust-mod-的映射关系">Protobuf package 与 Rust mod 的映射关系</a></h2>
+<p>在示例中，proto 定义在了 <code>getting.v1</code> package 中，那么生成的 Rust 代码就一定位于 <code>getting::v1</code> module 中吗？实际上是不会的，<code>tonic</code> 生成的代码并不会包含 <code>getting::v1</code> 这个父模块路径，这些都需要我们自己定义。我们再创建几个 .proto 文件看看 <code>tonic</code> 生成的代码就会明白了。</p>
+<p>创建 <code>proto/getting/common/page.proto</code> 文件并添加如下内容：</p>
+<pre><code class="language-protobuf">syntax = "proto3";
+
+package getting.common;
+
+message Pagination {
+  int64 page = 1;
+  int64 page_size = 2;
+}
+</code></pre>
+<p>创建 <code>proto/getting/v1/user.proto</code> 文件并添加如下内容：</p>
+<pre><code class="language-protobuf">syntax = "proto3";
+
+package getting.v1;
+
+import "getting/common/page.proto";
+
+message UserDto {
+  int64 id = 1;
+  string email = 2;
+  optional string name = 3;
+  int32 status = 4;
+}
+
+message PageUserRequest {
+  getting.common.Pagination pagination = 1;
+}
+</code></pre>
+<p>相应的修改 <code>build.rs</code> 文件，将 <code>"proto/getting/v1/user.proto", "getting/common/page.proto"</code> 添加到 <code>compile</code> 方法的第一个参数数组里（<code>protos</code>）以让 <code>tonic-build</code> 可以编译相关的 .proto 文件。</p>
+<p>然后我们在 <code>pb.rs</code> 模块里写个简单的测试：</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[cfg(test)]
+mod tests {
+  use super::getting::v1::*;
+
+  #[test]
+  fn test_user() {
+    let pagination = Pagination { page: 1, page_size: 20, ..Default::default() };
+    let page_user_request = PageUserRequest { pagination: Some(pagination) };
+    println!("Page user request is {:?}", page_user_request);
+  }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>并通过 <code>cargo test pb::tests -q</code> 命令运行测试，这时会输出编译错误：</p>
+<pre><code class="language-sh">error[E0433]: failed to resolve: could not find `common` in `super`
+   --&gt; /Users/yangjing/workspaces/books/codes/tonic-getting/target/debug/build/tonic-getting-caf65bf194fbeca1/out/getting.v1.rs:409:51
+    |
+409 |     pub pagination: ::core::option::Option&lt;super::common::Pagination&gt;,
+    |                                                   ^^^^^^ could not find `common` in `super`
+
+error[E0422]: cannot find struct, variant or union type `Pagination` in this scope
+  --&gt; src/pb.rs:18:22
+   |
+18 |     let pagination = Pagination { page: 1, page_size: 20, ..Default::default() };
+   |                      ^^^^^^^^^^ not found in this scope
+</code></pre>
+<p>可以看到，在生成的 <code>getting.v1.rs</code> 文件中，<code>pagination</code> 字段对 <code>Pagination</code> 类型的应用使用了 <code>super::common::Pagination</code> 路径，而 <code>super</code> 在模块树中指的是上级目录，所以这里会报错。那我们在 <code>v1</code> 同级模块添加 <code>pub mod common</code> 模块代码，但这时 <code>tonic::include_proto!</code> 我们应该引入哪个文件呢？我们定位到 <code>getting.v1.rs</code> 所在目录会发现目录内文件如下：</p>
+<pre><code class="language-sh">.
+├── getting.common.rs
+├── getting.v1.rs
+</code></pre>
+<p>看到有 <code>getting.common.rs</code> 文件，我们尝试在 <code>pb.rs</code> 文件中引入 <code>getting::common::*</code> 模块，并修改测试代码：</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub mod getting {
+  pub mod common {
+    tonic::include_proto!("getting.common");
+  }
+  pub mod v1 {
+    tonic::include_proto!("getting.v1");
+  }
+}
+
+#[cfg(test)]
+mod tests {
+  use super::getting::common::*;
+  use super::getting::v1::*;
+
+  // ... 测试代码
+}
+<span class="boring">}</span></code></pre></pre>
+<p>重新运行测试，可以看到测试通过了。</p>
+<p><code>tonic-build</code> 对于 protobuf 的 <code>package</code> 路径，会生成以 <code>.</code>（英文点号）分隔的相应 rust 文件。如 <code>package getting.common</code> 会生成 <code>getting.common.rs</code> 文件，<code>package getting.v1</code> 会生成 <code>getting.v1.rs</code> 文件。而 Rust 代码里面对其它模块类型的引用，则使用 <code>super::common::Pagination</code> 这种相对路径的形式。所以我们在 <code>pb.rs</code> 文件里需要按 proto <code>package</code> 的路径来组织 Rust mod 层次。</p>
+<blockquote>
+<p>你可以试着在 <code>proto</code> 目录下创建一个 <code>basic.proto</code> 文件，并指定 <code>package getting</code>。这时，当在 <code>user.proto</code> 文件中引用 <code>basic.proto</code> 文件中的类型时，生成的 Rust 文件会是 <code>getting.rs</code>，这时在 <code>pb.rs</code> 文件中引用 <code>getting.rs</code> 文件中的类型时，就需要使用 <code>super::super::BasicType</code> 这种形式了。</p>
+</blockquote>
+<h2 id="小结-1"><a class="header" href="#小结-1">小结</a></h2>
+<h3 id="创建-rust-grpc-服务快速步骤"><a class="header" href="#创建-rust-grpc-服务快速步骤">创建 Rust gRPC 服务快速步骤</a></h3>
+<h4 id="这一个简单的-grpc-服务就完成了让我们总结下使用-rust-开发-grpc-服务的步骤"><a class="header" href="#这一个简单的-grpc-服务就完成了让我们总结下使用-rust-开发-grpc-服务的步骤">这一个简单的 gRPC 服务就完成了，让我们总结下使用 Rust 开发 gRPC 服务的步骤</a></h4>
+<ol>
+<li>使用 <code>cargo new</code> 命令创建项目</li>
+<li>添加必要的依赖，<code>tonic</code>、<code>prost</code>、<code>tonic-build</code>、<code>tokio</code></li>
+<li>引入 <code>.proto</code> 文件，通常放到 proto 目录中</li>
+<li>创建 <code>build.rs</code> 文件，并添加 <code>tonic-build</code> 定义</li>
+<li>创建 <code>pb</code> 模块，并通过 <code>tonic::include_proto!</code> 宏导入生成的 protobuf 存根 Rust 代码</li>
+<li>创建 gRPC 服务（使用 tonic）</li>
+</ol>
+<h4 id="protobuf-package-路径与-rust-mod-路径的映射关系"><a class="header" href="#protobuf-package-路径与-rust-mod-路径的映射关系">Protobuf <code>package</code> 路径与 Rust <code>mod</code> 路径的映射关系</a></h4>
+<ul>
+<li><code>package</code> 会生成以 <code>.</code>（英文点号）分隔的相应 rust 文件
+<ul>
+<li>如：<code>package getting.common</code> 会生成 <code>getting.common.rs</code> 文件，<code>package getting.v1</code> 会生成 <code>getting.v1.rs</code> 文件。</li>
+</ul>
+</li>
+<li>在 <code>pb.rs</code> 文件中，对 <code>package</code> 中定义的类型的引用，使用 <code>super::common::Pagination</code> 这种相对路径的形式。</li>
+</ul>
+<h4 id="定义服务"><a class="header" href="#定义服务">定义服务</a></h4>
+<ul>
+<li>定义 <code>XxxService</code> 结构体，并实现 <code>Xxx</code> trait</li>
+<li>使用 <code>Server::builder().add_service(XxxServer::new(XxxService)).serve(addr)</code> 启动服务</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="拦截器和认证"><a class="header" href="#拦截器和认证">拦截器和认证</a></h1>
+<h2 id="拦截器"><a class="header" href="#拦截器">拦截器</a></h2>
+<p>在 gRPC 服务架构中，拦截器是一个核心概念，它在请求处理流程中扮演着重要角色。拦截器能够在不修改核心业务逻辑的情况下，实现诸如认证、授权和日志记录等横切关注点，从而提高服务的安全性和可维护性。</p>
+<p>拦截器主要分为两类：服务端拦截器和客户端拦截器。服务端拦截器在服务器接收到请求后、执行实际处理逻辑之前进行拦截，可以用于请求验证、日志记录等。客户端拦截器则在客户端发送请求之前进行拦截，常用于添加认证信息、请求跟踪等场景。这两种拦截器共同构成了 gRPC 通信中的重要保障机制。</p>
+<h3 id="服务端拦截器"><a class="header" href="#服务端拦截器">服务端拦截器</a></h3>
+<h4 id="使用-tower-中间件"><a class="header" href="#使用-tower-中间件">使用 <code>tower</code> 中间件</a></h4>
+<p>tonic 基于 Axum 实现，所以 <code>tower</code> 生态的各类中间件都可以直接使用。比如：需要打印每个 gRPC 请求的日志，可以使用 <code>tower-http</code> 中的 <code>TraceLayer</code> 中间件。</p>
+<p>添加 <code>tower-http</code> 依赖：</p>
+<pre><code class="language-sh">cargo add tracing-subscriber
+cargo add tower-http --features trace
+</code></pre>
+<p>在 <code>main.rs</code> 中添加 <code>tracing_subscriber</code> 初始化日志，并添加 <code>TraceLayer</code> 中间件：</p>
+<pre><pre class="playground"><code class="language-rust edition2021">// ...
+use tower_http::trace::TraceLayer;
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+  tracing_subscriber::fmt::init();
+
+  // ...
+
+  Server::builder()
+    .layer(TraceLayer::new_for_grpc())
+    .add_routes(make_grpc_routes())
+    .serve(grpc_addr)
+    .await?;
+
+  Ok(())
+}</code></pre></pre>
+<p>使用 <code>RUST_LOG="tower_http=debug" cargo run</code> 启动服务，使用 <code>grpcurl</code> 发起 gRPC 请求。这时，就可以在终端看到 gRPC 请求的日志：</p>
+<pre><code class="language-sh">2024-09-19T14:19:01.671092Z DEBUG request{method=POST uri=http://localhost:9999/getting.v1.Auth/Signin version=HTTP/2.0}: tower_http::trace::on_request: started processing request
+2024-09-19T14:19:01.671302Z DEBUG request{method=POST uri=http://localhost:9999/getting.v1.Auth/Signin version=HTTP/2.0}: tower_http::trace::on_response: finished processing request latency=0 ms
+2024-09-19T14:19:01.671420Z DEBUG request{method=POST uri=http://localhost:9999/getting.v1.Auth/Signin version=HTTP/2.0}: tower_http::trace::on_eos: end of stream stream_duration=0 ms status=0
+</code></pre>
+<p>可以看到，一个 gRPC 请求的完整生命周期，包括请求开始（<code>on_request</code>）、响应结束（<code>on_response</code>）、请求结束（<code>on_eos</code>）。</p>
+<blockquote>
+<p>默认 Rust 将捕获所有日志输出，需要在启动服务时添加 <code>RUST_LOG="tower_http=debug"</code> 环境变量才能在终端看到日志输出。Windows 系统需要使用不同的方式设置环境变量。</p>
+<p>CMD：</p>
+<pre><code class="language-CMD">set RUST_LOG=tower_http=debug &amp;&amp; cargo run
+</code></pre>
+<p>Powershell：</p>
+<pre><code class="language-powershell">$env:RUST_LOG="tower_http=debug"; cargo run
+</code></pre>
+</blockquote>
+<h4 id="使用-tonic-interceptor"><a class="header" href="#使用-tonic-interceptor">使用 tonic interceptor</a></h4>
+<p>tonic 还提供了 <code>tonic::Interceptor</code> trait，用于在服务端/客户端拦截器中使用。我们对 <code>UserService</code> 添加一个 Authentication Interceptor，用于在服务端拦截器中验证请求的认证信息。</p>
+<p>定义拦截器函数：</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn auth_interceptor(request: tonic::Request&lt;()&gt;) -&gt; Result&lt;tonic::Request&lt;()&gt;, tonic::Status&gt; {
+  let authorization = request
+    .metadata()
+    .get("authorization")
+    .ok_or_else(|| tonic::Status::unauthenticated("No auth token provided"))?
+    .to_str()
+    .map_err(|e| tonic::Status::unauthenticated(e.to_string()))?;
+  let token = &amp;authorization["Berere ".len()..];
+  if token != SESSION_TOKEN {
+    return Err(tonic::Status::unauthenticated("Invalid auth token"));
+  }
+  Ok(request)
+}
+<span class="boring">}</span></code></pre></pre>
+<p>上面代码首先从请求元数据中获取 <code>authorization</code> 信息，然后验证 token 是否正确（这里为演示简单，直接使用了一个固定值: <code>SESSION_TOKEN</code>）。若 token 验证失败，则返回 <code>Status::unauthenticated</code> 错误，tonic 会自动将错误转换为响应给客户端。</p>
+<p>要应用拦截器，只需要调用 <code>UserServer::with_interceptor</code> 方法，在第2个参数传入 <code>auth_interceptor</code> 函数即可：</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>UserServer::with_interceptor(UserService, auth_interceptor)
+<span class="boring">}</span></code></pre></pre>
+<p>这时候再次发起 gRPC 的 <code>User/Update</code> 请求，则会收到 <code>Unauthenticated</code> 错误：</p>
+<pre><code class="language-sh">grpcurl -plaintext -import-path ./proto \
+  -proto getting/v1/user.proto \
+  -d '{
+    "id": 1,
+    "name": "yangbajing"
+  }' \
+  localhost:9999 getting.v1.User/Update
+# 下面是响应输出
+ERROR:
+  Code: Unauthenticated
+  Message: No auth token provided
+</code></pre>
+<p>可以通过为 <code>grpcurl</code> 命令添加 <code>-H</code> 选项，指定 <code>authorization</code> 元数据（HTTP Header）。如：<code>-H 'authorization: Bearer L1AhTRgFMiTkQMuGf8PnY6yHAmaV72ESQsEzo0cVWmiodIEx'</code>。</p>
+<h3 id="客户端拦截器"><a class="header" href="#客户端拦截器">客户端拦截器</a></h3>
+<p>客户端拦截器用于在客户端发送请求时执行一些逻辑。常用的场景是添加认证信息，比如：session token。</p>
+<p>我们通过 <strong>example</strong> 来演示客户端拦截器的用法，创建 <code>examples/client-interceptor.rs</code> 文件，添加以下 Rust 代码：</p>
+<pre><pre class="playground"><code class="language-rust edition2021">use tonic::{transport::Channel, Code, Request, Status};
+use tonic_getting::pb::getting::v1::{user_client::UserClient, UpdateUserRequest};
+
+#[tokio::main]
+async fn main() -&gt; anyhow::Result&lt;()&gt; {
+  let channel = Channel::from_static("http://localhost:9999").connect().await?;
+
+  let mut client = UserClient::with_interceptor(channel, |mut request: Request&lt;()&gt;| {
+    let token = "Bearer L1AhTRgFMiTkQMuGf8PnY6yHAmaV72ESQsEzo0cVWmiodIEx"
+      .parse()
+      .map_err(|_| Status::new(Code::Internal, "InvalidMetadataValue"))?;
+    request.metadata_mut().insert("authorization", token);
+    Ok(request)
+  });
+
+  let request = Request::new(UpdateUserRequest { id: 1, name: Some("yangbajing".to_string()), status: Some(100) });
+
+  let response = client.update(request).await?;
+
+  println!("Response: {:?}", response);
+
+  Ok(())
+}</code></pre></pre>
+<p>客户端拦截器也使用了 <code>with_interceptor</code> 方法，这里与服务端拦截器不同的是，在第2个参数传入一个闭包函数。当然，也可以像服务端一样定义一个拦截器函数使用。</p>
+<p>通过以下命令运行示例程序 <code>cargo run --example client-interceptor</code>，可以看到 <code>User/Update</code> 请求成功。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="维护-proto-文件"><a class="header" href="#维护-proto-文件">维护 .proto 文件</a></h1>
+<p>在本节中，我们将看到如何准备一个单独的代码库来维护 .proto 文件，为多种语言生成源代码，并将文件保存在专用文件夹中。维护 .proto 文件在单独的代码库中的主要原因是能够为任何语言生成存根，以供任何消费者使用。如果我们将这些操作保留在包含 Go 生产代码的微服务项目中，那么任何外部非 Go 消费者都可以依赖这个 Go 项目。在 Go 微服务项目中生成 Java 源代码可能不是一个好主意，因为它们永远不会用于服务间通信。然而，它们仍然会与您的生产 Go 源代码一起打包和标记。</p>
+<h2 id="proto-项目结构"><a class="header" href="#proto-项目结构">proto 项目结构</a></h2>
+<p>假设您创建了一个仓库，github.com/yangbajing/microservices-proto，专门为每个服务创建文件夹以存储 <code>.proto</code> 文件。该项目将具有以下特征：</p>
+<ul>
+<li><code>.proto</code> 文件按服务目录分组，例如根目录中的 <code>order/order.proto</code>。</li>
+<li>根项目中有一个目录用于每种语言，以存储特定语言的实现</li>
+<li>为每个服务生成的代码将被格式化为典型的 Rust crate 项目，因为它将作为依赖项添加到消费者端。</li>
+<li>作为一个例子，order 服务的模块名称将是 <code>github.com/yangbajing/microservices-proto/crates/order</code>。</li>
+<li>生成的源代码将被标记为：todo</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="兼容性"><a class="header" href="#兼容性">兼容性</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="总结-1"><a class="header" href="#总结-1">总结</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="微服务项目设置"><a class="header" href="#微服务项目设置">微服务项目设置</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="六边型架构"><a class="header" href="#六边型架构">六边型架构</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="订单服务"><a class="header" href="#订单服务">订单服务</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="总结-2"><a class="header" href="#总结-2">总结</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="服务间通信"><a class="header" href="#服务间通信">服务间通信</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="grpc-服务间通信"><a class="header" href="#grpc-服务间通信">gRPC 服务间通信</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="其它服务产品支付"><a class="header" href="#其它服务产品支付">其它服务：产品、支付</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="错误处理"><a class="header" href="#错误处理">错误处理</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="总结-3"><a class="header" href="#总结-3">总结</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="弹性通信"><a class="header" href="#弹性通信">弹性通信</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="弹性模式"><a class="header" href="#弹性模式">弹性模式</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="深入错误处理"><a class="header" href="#深入错误处理">深入错误处理</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="保护-grpc-通信"><a class="header" href="#保护-grpc-通信">保护 gRPC 通信</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="总结-4"><a class="header" href="#总结-4">总结</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="测试微服务"><a class="header" href="#测试微服务">测试微服务</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="单元测试"><a class="header" href="#单元测试">单元测试</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="集成测试"><a class="header" href="#集成测试">集成测试</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="端到端测试"><a class="header" href="#端到端测试">端到端测试</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="总结-5"><a class="header" href="#总结-5">总结</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="部署-1"><a class="header" href="#部署-1">部署</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="docker"><a class="header" href="#docker">Docker</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="证书管理"><a class="header" href="#证书管理">证书管理</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="部署策略"><a class="header" href="#部署策略">部署策略</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="总结-6"><a class="header" href="#总结-6">总结</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="可观测性"><a class="header" href="#可观测性">可观测性</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="在-nextjs-中整合-grpc-和-grpc-web构建高效的全栈应用"><a class="header" href="#在-nextjs-中整合-grpc-和-grpc-web构建高效的全栈应用">在 Next.js 中整合 gRPC 和 gRPC-Web：构建高效的全栈应用</a></h1>
+<p>本文将介绍如何在 Next.js 应用中结合 Tonic 框架，实现 gRPC 和 gRPC-Web 的无缝集成。我们将详细介绍如何在服务端组件和 API 路由中使用 gRPC 与后端微服务通信，以及如何在客户端组件中利用 gRPC-Web 直接与后端服务交互。这种方法充分发挥了 Next.js 的服务端渲染能力和 gRPC 的高性能特性，同时保证了前后端的一致性和开发效率。</p>
+<p>对于 gRPC 和 gRPC-Web 的介绍，可以参考 <a href="https://grpc.io/docs/">gRPC 官方文档</a> 和 <a href="https://grpc.io/docs/web/">gRPC-Web 官方文档</a>。</p>
+<h2 id="nextjs"><a class="header" href="#nextjs">Next.js</a></h2>
+<p>Next.js 是一个基于 React 的开源 JavaScript 框架，由 Vercel 公司开发维护。它为开发者提供了构建高性能、可扩展的 Web 应用的强大工具和优化策略。</p>
+<h3 id="nextjs-的核心特性"><a class="header" href="#nextjs-的核心特性">Next.js 的核心特性</a></h3>
+<ol>
+<li><strong>服务器端渲染 (SSR)</strong>：Next.js 默认支持服务器端渲染，可以显著提高首屏加载速度和搜索引擎优化 (SEO) 效果。</li>
+<li><strong>静态站点生成 (SSG)</strong>：支持在构建时生成静态 HTML 页面，适用于内容不经常变化的网站。</li>
+<li><strong>文件系统路由</strong>：基于文件系统的直观路由方式，简化了路由配置过程。</li>
+<li><strong>API 路由</strong>：允许开发者在同一项目中创建 API 端点，便于前后端集成。</li>
+<li><strong>自动代码分割</strong>：智能地将代码分割成小块，优化加载性能。</li>
+<li><strong>内置 CSS 支持</strong>：支持 CSS Modules、Sass 等多种样式解决方案。</li>
+<li><strong>快速刷新</strong>：提供近乎即时的开发体验，支持组件级别的热重载。</li>
+<li><strong>图像优化</strong>：内置的 Image 组件自动优化图像加载和显示。</li>
+<li><strong>国际化支持</strong>：简化了多语言网站的开发流程。</li>
+<li><strong>零配置</strong>：提供开箱即用的开发体验，无需复杂的配置。</li>
+</ol>
+<p>Next.js 的这些特性使其成为构建现代 Web 应用的理想选择，特别适合需要兼顾性能、可扩展性和开发效率的项目。接下来让我们创建一个 Next.js 项目，并添加 gRPC 依赖。使用下面的命令创建 Next.js 项目。</p>
+<pre><code class="language-sh">pnpm dlx create-next-app@latest nextjs-getting
+</code></pre>
+<p>除 <code>Would you like to customize the default import alias (@/*)?*</code> 选择 <code>No</code>，其它都选择 <code>Yes</code>。</p>
+<blockquote>
+<p>也许你还没有安装 <code>pnpm</code>，可以参考 <a href="https://pnpm.io/zh/installation">pnpm 安装文档</a> 或直接 <code>npm install -g pnpm</code> 进行安装。</p>
+</blockquote>
+<p>进入 <code>nextjs-getting</code> 目录，使用 <code>pnpm dev</code> 启动项目，在浏览器中访问 <code>http://localhost:3000</code>，可以看到 Next.js 的默认首页（使用 pnpm 初始化项目时已经安装了相关依赖）。</p>
+<h2 id="使用-nice-grpc"><a class="header" href="#使用-nice-grpc">使用 nice-grpc</a></h2>
+<p><a href="https://github.com/deeplay-io/nice-grpc">nice-grpc</a> 是一个对用户友好的 gRPC 框架，支持 node.js 和浏览器环境（使用 grpc-web）运行。</p>
+<ul>
+<li>使用 Typescript 编写</li>
+<li>提供了 Promise 和 Async Iterables 进行流式传输的现代 API</li>
+<li>支持使用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal"><code>AbortSignal</code></a> 取消正在进行的传播</li>
+<li>通过使用同步生成器的简洁应用程序接口支持客户端和服务器中间件</li>
+</ul>
+<h2 id="使用服务端组件访问-grpc-微服务"><a class="header" href="#使用服务端组件访问-grpc-微服务">使用服务端组件访问 gRPC 微服务</a></h2>
+<p>添加以下依赖到项目中：</p>
+<pre><code class="language-sh">pnpm add nice-grpc protobufjs long
+pnpm add -D grpc-tools ts-proto
+</code></pre>
+<p>继续使用之前 <a href="https://github.com/yangbajing/books/tree/main/codes/tonic-getting"><code>tonic-getting</code></a> 项目中的 <code>proto</code> 文件，复制 <code>tonic-getting</code> 项目的 <code>proto</code> 目录到 <code>nextjs-getting</code> 项目根目录中。然后创建 <code>generate-proto.sh</code> 生成脚本，内容如下：</p>
+<pre><code class="language-sh">PROTO_DIR="./proto"
+OUT_DIR="./src/pb"
+
+# 创建输出目录
+mkdir -p $OUT_DIR
+
+protoc \
+    --plugin=./node_modules/.bin/protoc-gen-ts_proto \
+    --ts_proto_out=${OUT_DIR} \
+    --ts_proto_opt=outputServices=nice-grpc,outputServices=generic-definitions,useExactTypes=false \
+    -I ${PROTO_DIR} \
+    ${PROTO_DIR}/getting/*.proto \
+    ${PROTO_DIR}/getting/common/*.proto \
+    ${PROTO_DIR}/getting/v1/*.proto
+</code></pre>
+<blockquote>
+<p>Windows 下执行脚本在代码仓库可以找到。</p>
+</blockquote>
+<p>运行 <code>./generate-proto.sh</code> 生成 TypeScript 代码，代码将输出到 <code>./src/pb</code> 目录中。后续若 proto 文件有更新，只需再次运行脚本即可。</p>
+<h3 id="创建-grpc-客户端"><a class="header" href="#创建-grpc-客户端">创建 gRPC 客户端</a></h3>
+<p>创建 gRPC 客户端前，先启动后端服务（代码见：https://github.com/yangbajing/books/tree/main/codes/tonic-getting）。使用 <code>cargo run</code> 启动 <code>tonic-getting</code> 项目中的后端服务。</p>
+<h4 id="srclibgrpcts"><a class="header" href="#srclibgrpcts">src/lib/grpc.ts</a></h4>
+<p>创建 grpc 客户端，新建 <code>src/lib/grpc.ts</code> 文件，输入以下代码：</p>
+<pre><code class="language-typescript">import { createChannel, createClient } from "nice-grpc";
+import { AuthClient, AuthDefinition } from "@/pb/getting/v1/auth";
+
+export const channel = createChannel("localhost:9999");
+export const authClient: AuthClient = createClient(AuthDefinition, channel);
+</code></pre>
+<h4 id="srcactionssignts"><a class="header" href="#srcactionssignts">src/actions/sign.ts</a></h4>
+<p>创建用于 Next.js 服务端组件的 Action 函数，新建 <code>src/actions/sign.ts</code> 文件，输入以下代码：</p>
+<pre><code class="language-typescript">"use server";
+import { SigninResponse, TokenType } from "@/pb/getting/v1/auth";
+import { authClient } from "@/lib/grpc";
+
+export async function signin(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  const request = { email, password };
+  try {
+    const response: SigninResponse = await authClient.signin(request);
+
+    console.log("登录成功:", response);
+    console.log("令牌类型:", TokenType[response.tokenType]);
+  } catch (error) {
+    console.error("登录失败:", error);
+  }
+}
+</code></pre>
+<h4 id="srcappsigninpagetsx"><a class="header" href="#srcappsigninpagetsx">src/app/signin/page.tsx</a></h4>
+<p>创建登录页面，新建 <code>src/app/signin/page.tsx</code> 文件，输入以下代码：</p>
+<pre><code class="language-typescript">// ...
+import { signin } from "@/actions/sign";
+
+export default function Signin() {
+  return (
+    &lt;div className="w-full h-full"&gt;
+      &lt;form action={signin} className="w-80 mx-auto mt-20 block justify-center items-center space-y-4"&gt;
+        &lt;div&gt;
+          &lt;Label htmlFor="email"&gt;邮箱&lt;/Label&gt;
+          &lt;Input type="email" id="email" name="email" /&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;Label htmlFor="password"&gt;密码&lt;/Label&gt;
+          &lt;Input type="password" id="password" name="password" /&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;Button type="submit"&gt;登录&lt;/Button&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+    &lt;/div&gt;
+  );
+}
+</code></pre>
+<p>打开浏览器，访问 <code>http://localhost:3000/signin</code>，可以看到登录页面。输入邮箱、密码，点击登录按钮，可以在终端看到登录成功的信息（next.js），以及在 gRPC 后端服务中看到登录日志打印。</p>
+<p>Next.js 终端输出：</p>
+<pre><code class="language-sh">登录成功: {
+  accessToken: 'L1AhTRgFMiTkQMuGf8PnY6yHAmaV72ESQsEzo0cVWmiodIEx',
+  tokenType: 1
+}
+令牌类型: TOKEN_TYPE_BEARER
+</code></pre>
+<h2 id="使用客户端组件访问-grpc-web-api"><a class="header" href="#使用客户端组件访问-grpc-web-api">使用客户端组件访问 gRPC-WEB API</a></h2>
+<p>添加 <code>grpc-web</code> 依赖：</p>
+<pre><code class="language-sh">pnpm add nice-grpc-web
+</code></pre>
+<p>配置 <code>next.config.js</code> 文件，添加对 <code>grpc-web</code> 地址的 <strong>rewrites</strong> 规则：</p>
+<pre><code class="language-typescript">module.exports = {
+  async rewrites() {
+    return [
+      {
+        source: "/getting.v1.:services/:paths*",
+        destination: "http://localhost:9999/getting.v1.:services/:paths*",
+      },
+    ];
+  },
+};
+</code></pre>
+<p>创建 <code>lib/grpc-web.ts</code> 文件，添加以下代码：</p>
+<pre><code class="language-typescript">import { Channel, Client, ClientFactory, createChannel, createClientFactory, Metadata } from "nice-grpc-web";
+import { UserDefinition } from "@/pb/getting/v1/user";
+
+const clientFactory: ClientFactory = createClientFactory().use((call, options) =&gt; {
+  const token = "L1AhTRgFMiTkQMuGf8PnY6yHAmaV72ESQsEzo0cVWmiodIEx";
+  return call.next(call.request, {
+    ...options,
+    metadata: Metadata(options.metadata).set("Authorization", `Bearer ${token}`),
+  });
+});
+
+export const channel: Channel = createChannel("");
+export const userClient: Client&lt;UserDefinition&gt; = clientFactory.create(UserDefinition, channel);
+</code></pre>
+<p>这里从 <code>nice-grpc-web</code> 导入 <code>Channel</code>、<code>Client</code>、……<code>Metadata</code> 类型和函数，创建 <code>clientFactory</code> 和 <code>channel</code>，然后使用 <code>clientFactory.create</code> 方法创建 <code>userClient</code>。</p>
+<p>在 <code>clientFactory</code> 中，我们创建一个 <code>Metadata</code> 对象，并设置 <code>Authorization</code> HTTP 头，值为 <code>Bearer</code> 加上从后端服务获取的令牌。这样在每次调用 gRPC-WEB API 时，都会自动添加令牌。</p>
+<p>在使用 <code>clientChannel</code> 时，我们将其设置为空字符串，这样它将使用从浏览器中获取的 URL 地址。gRPC-WEB 在访问后端 API 时，会应用 <code>rewrites</code> 规则 <code>/getting.v1.User/Get</code> ，并由 Next.js 服务将请求代理到后端 <code>http://localhost:9999/getting.v1.User/Get</code> 地址。</p>
+<p><img src="ch09/./imgs/grpc-web-chrome-network.png" alt="image" /></p>
+<p>打开 chrome 控制台点击 <code>Network</code> 标签查看 <code>getting.v1.User/Get</code> 请求。期 <code>Content-Type</code> 为 <code>application/grpc-web+proto</code>，也正确的设置了 <code>Authorization</code> 为 <code>Bearer</code> 类型。</p>
+<h2 id="小结-2"><a class="header" href="#小结-2">小结</a></h2>
+<p>本文介绍了如何在 Next.js 应用中集成 gRPC 和 gRPC-Web，实现了高效的全栈应用架构。通过这种集成，我们充分利用了 Next.js 的服务端渲染能力和 gRPC 的高性能特性，同时保证了前后端的一致性和开发效率。</p>
+<h3 id="技术栈的优势"><a class="header" href="#技术栈的优势">技术栈的优势</a></h3>
+<ol>
+<li><strong>性能优化</strong>：gRPC 的高效二进制传输协议和 Next.js 的服务端渲染结合，大大提升了应用的性能。</li>
+<li><strong>开发效率</strong>：使用 <code>nice-grpc</code> 和 <code>nice-grpc-web</code> 简化了 gRPC 的使用，提高了开发效率。</li>
+<li><strong>类型安全</strong>：通过 <code>protobuf</code> 生成的 <code>TypeScript</code> 代码，确保了前后端接口的类型一致性。</li>
+<li><strong>灵活性</strong>：Next.js 的服务端组件和客户端组件分别使用 gRPC 和 gRPC-Web，提供了更灵活的架构选择。</li>
+</ol>
+<h3 id="局限性"><a class="header" href="#局限性">局限性</a></h3>
+<ol>
+<li><strong>学习曲线</strong>：开发者需要同时掌握 Next.js、gRPC 和 protobuf，可能存在一定的学习成本。</li>
+<li><strong>浏览器兼容性</strong>：gRPC-Web 可能在一些旧版浏览器中不被支持，需要考虑兼容性问题。（<em>现代浏览器基本都支持，当前这一问题不大</em>）</li>
+</ol>
+<h3 id="未来展望和改进方向"><a class="header" href="#未来展望和改进方向">未来展望和改进方向</a></h3>
+<ol>
+<li><strong>自动化工具</strong>：开发更智能的代码生成工具，进一步简化 gRPC 和 Next.js 的集成过程。</li>
+<li><strong>性能优化</strong>：探索 gRPC 流式传输在 Next.js 中的应用，以支持更高效的实时数据交互。</li>
+<li><strong>安全性增强</strong>：实现更完善的身份认证和授权机制，确保 gRPC 调用的安全性。</li>
+<li><strong>监控和日志</strong>：集成专门的 gRPC 监控和日志工具，提高应用的可观测性。</li>
+<li><strong>跨平台支持</strong>：探索将此架构扩展到移动应用开发，实现真正的全平台统一接口。</li>
+</ol>
+<p>通过本文的实践，我们展示了 Next.js 与 gRPC 的强大组合。这种架构不仅适用于小型项目，也能很好地扩展到大型、复杂的企业级应用。随着技术的不断发展，我们期待看到更多创新的集成方式，进一步提升 Web 应用的开发体验和运行效率。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="可观测性-1"><a class="header" href="#可观测性-1">可观测性</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="日志"><a class="header" href="#日志">日志</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="指标"><a class="header" href="#指标">指标</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="跟踪"><a class="header" href="#跟踪">跟踪</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="总结-7"><a class="header" href="#总结-7">总结</a></h1>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
