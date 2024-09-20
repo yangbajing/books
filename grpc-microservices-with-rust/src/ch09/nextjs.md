@@ -76,7 +76,7 @@ protoc \
 
 ### 创建 gRPC 客户端
 
-创建 gRPC 客户端前，先启动后端服务（代码见：https://github.com/yangbajing/books/tree/main/codes/tonic-getting）。使用 `cargo run` 启动 `tonic-getting` 项目中的后端服务。
+创建 gRPC 客户端前，先启动后端服务（代码见：[tonic-getting](https://github.com/yangbajing/books/tree/main/codes/tonic-getting)）。使用 `cargo run` 启动 `tonic-getting` 项目中的后端服务。
 
 #### src/lib/grpc.ts
 
@@ -115,6 +115,14 @@ export async function signin(formData: FormData) {
 }
 ```
 
+这里我们使用了 React 服务端组件的 form action 功能。这种方式有以下几个优势:
+
+1. **简化状态管理**: 不需要在客户端维护表单状态，减少了客户端代码的复杂性。
+2. **提高性能**: 表单提交直接在服务器端处理，减少了客户端-服务器之间的往返通信。
+3. **增强安全性**: 敏感操作(如登录)在服务器端进行，可以更好地保护用户数据。
+4. **改善用户体验**: 即使在 JavaScript 禁用的情况下，表单仍然可以正常工作。
+5. **无缝集成服务端逻辑**: 可以直接在服务端组件中处理表单提交，方便与后端服务(如 gRPC)集成。
+
 #### src/app/signin/page.tsx
 
 创建登录页面，新建 `src/app/signin/page.tsx` 文件，输入以下代码：
@@ -143,6 +151,8 @@ export default function Signin() {
   );
 }
 ```
+
+*使用了 shadcn UI 库，完整代码见：[yangbajing/books/blob/main/codes/nextjs-getting/src/app/signin/page.tsx](https://github.com/yangbajing/books/blob/main/codes/nextjs-getting/src/app/signin/page.tsx)*
 
 打开浏览器，访问 `http://localhost:3000/signin`，可以看到登录页面。输入邮箱、密码，点击登录按钮，可以在终端看到登录成功的信息（next.js），以及在 gRPC 后端服务中看到登录日志打印。
 
@@ -218,6 +228,16 @@ export const userClient: Client<UserDefinition> = clientFactory.create(UserDefin
 3. **类型安全**：通过 `protobuf` 生成的 `TypeScript` 代码，确保了前后端接口的类型一致性。
 4. **灵活性**：Next.js 的服务端组件和客户端组件分别使用 gRPC 和 gRPC-WEB，提供了更灵活的架构选择。
 
+#### BFF（Backends For Frontends）
+
+BFF（Backends For Frontends）是一种先进的 Web 架构模式，最初由 Sam Newman 在其文章 [Pattern: Backend for Frontends](https://samnewman.io/patterns/architectural/bff/) 中提出。这种架构通过在前端和后端之间引入一个专门的中间层，有效地优化了前后端分离，显著提升了开发效率和系统性能。
+
+在现代 Web 开发中，Next.js（以及类似的 Nuxt.js）等框架凭借其强大的服务端渲染（SSR）和静态站点生成（SSG）能力，为 BFF 的实现提供了理想的技术基础。这些框架内置的服务端功能，如 API 路由和服务端组件，为与后端服务的无缝集成开辟了新的可能性。相比传统的 BFF 实现方式（如使用 Spring Gateway 或 Nginx 反向代理进行 API 聚合），Next.js 的服务端特性为 BFF 架构提供了更为自然和高效的解决方案。
+
+这种架构模式为后端开发带来了显著优势，使其能够更加专注于核心业务逻辑的实现。BFF 层有效地隔离了前端展示需求和多端适配的复杂性，简化了后端服务的设计。同时，对前端开发人员而言，采用 Next.js 实现 BFF 功能赋予了他们更大的数据处理自主权。这不仅提高了前端开发的灵活性，还使得数据获取和处理过程更加高效和可控。
+
+BFF 模式结合 Next.js 等现代框架，代表了 Web 开发的一个重要发展方向，为构建高性能、可维护的大规模 Web 应用提供了强有力的技术支持。
+
 ### 局限性
 
 1. **学习曲线**：开发者需要同时掌握 Next.js、gRPC 和 protobuf，可能存在一定的学习成本。
@@ -233,4 +253,9 @@ export const userClient: Client<UserDefinition> = clientFactory.create(UserDefin
 
 通过本文的实践，我们展示了 Next.js 与 gRPC 的强大组合。这种架构不仅适用于小型项目，也能很好地扩展到大型、复杂的企业级应用。随着技术的不断发展，我们期待看到更多创新的集成方式，进一步提升 WEB 应用的开发体验和运行效率。
 
+### 源码
 
+本文涉及源码在 Github 上：
+
+- Next.js 项目：[https://github.com/yangbajing/books/tree/main/codes/nextjs-getting](https://github.com/yangbajing/books/tree/main/codes/nextjs-getting)
+- gRPC 服务：[https://github.com/yangbajing/books/tree/main/codes/tonic-getting](https://github.com/yangbajing/books/tree/main/codes/tonic-getting)

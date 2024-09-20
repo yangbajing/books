@@ -235,7 +235,7 @@ protoc \
 </blockquote>
 <p>运行 <code>./generate-proto.sh</code> 生成 TypeScript 代码，代码将输出到 <code>./src/pb</code> 目录中。后续若 proto 文件有更新，只需再次运行脚本即可。</p>
 <h3 id="创建-grpc-客户端"><a class="header" href="#创建-grpc-客户端">创建 gRPC 客户端</a></h3>
-<p>创建 gRPC 客户端前，先启动后端服务（代码见：https://github.com/yangbajing/books/tree/main/codes/tonic-getting）。使用 <code>cargo run</code> 启动 <code>tonic-getting</code> 项目中的后端服务。</p>
+<p>创建 gRPC 客户端前，先启动后端服务（代码见：<a href="https://github.com/yangbajing/books/tree/main/codes/tonic-getting">tonic-getting</a>）。使用 <code>cargo run</code> 启动 <code>tonic-getting</code> 项目中的后端服务。</p>
 <h4 id="srclibgrpcts"><a class="header" href="#srclibgrpcts">src/lib/grpc.ts</a></h4>
 <p>创建 grpc 客户端，新建 <code>src/lib/grpc.ts</code> 文件，输入以下代码：</p>
 <pre><code class="language-typescript">import { createChannel, createClient } from "nice-grpc";
@@ -265,6 +265,14 @@ export async function signin(formData: FormData) {
   }
 }
 </code></pre>
+<p>这里我们使用了 React 服务端组件的 form action 功能。这种方式有以下几个优势:</p>
+<ol>
+<li><strong>简化状态管理</strong>: 不需要在客户端维护表单状态，减少了客户端代码的复杂性。</li>
+<li><strong>提高性能</strong>: 表单提交直接在服务器端处理，减少了客户端-服务器之间的往返通信。</li>
+<li><strong>增强安全性</strong>: 敏感操作(如登录)在服务器端进行，可以更好地保护用户数据。</li>
+<li><strong>改善用户体验</strong>: 即使在 JavaScript 禁用的情况下，表单仍然可以正常工作。</li>
+<li><strong>无缝集成服务端逻辑</strong>: 可以直接在服务端组件中处理表单提交，方便与后端服务(如 gRPC)集成。</li>
+</ol>
 <h4 id="srcappsigninpagetsx"><a class="header" href="#srcappsigninpagetsx">src/app/signin/page.tsx</a></h4>
 <p>创建登录页面，新建 <code>src/app/signin/page.tsx</code> 文件，输入以下代码：</p>
 <pre><code class="language-typescript">// ...
@@ -290,6 +298,7 @@ export default function Signin() {
   );
 }
 </code></pre>
+<p><em>使用了 shadcn UI 库，完整代码见：<a href="https://github.com/yangbajing/books/blob/main/codes/nextjs-getting/src/app/signin/page.tsx">yangbajing/books/blob/main/codes/nextjs-getting/src/app/signin/page.tsx</a></em></p>
 <p>打开浏览器，访问 <code>http://localhost:3000/signin</code>，可以看到登录页面。输入邮箱、密码，点击登录按钮，可以在终端看到登录成功的信息（next.js），以及在 gRPC 后端服务中看到登录日志打印。</p>
 <p>Next.js 终端输出：</p>
 <pre><code class="language-sh">登录成功: {
@@ -343,6 +352,11 @@ export const userClient: Client&lt;UserDefinition&gt; = clientFactory.create(Use
 <li><strong>类型安全</strong>：通过 <code>protobuf</code> 生成的 <code>TypeScript</code> 代码，确保了前后端接口的类型一致性。</li>
 <li><strong>灵活性</strong>：Next.js 的服务端组件和客户端组件分别使用 gRPC 和 gRPC-WEB，提供了更灵活的架构选择。</li>
 </ol>
+<h4 id="bffbackends-for-frontends"><a class="header" href="#bffbackends-for-frontends">BFF（Backends For Frontends）</a></h4>
+<p>BFF（Backends For Frontends）是一种先进的 Web 架构模式，最初由 Sam Newman 在其文章 <a href="https://samnewman.io/patterns/architectural/bff/">Pattern: Backend for Frontends</a> 中提出。这种架构通过在前端和后端之间引入一个专门的中间层，有效地优化了前后端分离，显著提升了开发效率和系统性能。</p>
+<p>在现代 Web 开发中，Next.js（以及类似的 Nuxt.js）等框架凭借其强大的服务端渲染（SSR）和静态站点生成（SSG）能力，为 BFF 的实现提供了理想的技术基础。这些框架内置的服务端功能，如 API 路由和服务端组件，为与后端服务的无缝集成开辟了新的可能性。相比传统的 BFF 实现方式（如使用 Spring Gateway 或 Nginx 反向代理进行 API 聚合），Next.js 的服务端特性为 BFF 架构提供了更为自然和高效的解决方案。</p>
+<p>这种架构模式为后端开发带来了显著优势，使其能够更加专注于核心业务逻辑的实现。BFF 层有效地隔离了前端展示需求和多端适配的复杂性，简化了后端服务的设计。同时，对前端开发人员而言，采用 Next.js 实现 BFF 功能赋予了他们更大的数据处理自主权。这不仅提高了前端开发的灵活性，还使得数据获取和处理过程更加高效和可控。</p>
+<p>BFF 模式结合 Next.js 等现代框架，代表了 Web 开发的一个重要发展方向，为构建高性能、可维护的大规模 Web 应用提供了强有力的技术支持。</p>
 <h3 id="局限性"><a class="header" href="#局限性">局限性</a></h3>
 <ol>
 <li><strong>学习曲线</strong>：开发者需要同时掌握 Next.js、gRPC 和 protobuf，可能存在一定的学习成本。</li>
@@ -357,6 +371,12 @@ export const userClient: Client&lt;UserDefinition&gt; = clientFactory.create(Use
 <li><strong>跨平台支持</strong>：探索将此架构扩展到移动应用开发，实现真正的全平台统一接口。</li>
 </ol>
 <p>通过本文的实践，我们展示了 Next.js 与 gRPC 的强大组合。这种架构不仅适用于小型项目，也能很好地扩展到大型、复杂的企业级应用。随着技术的不断发展，我们期待看到更多创新的集成方式，进一步提升 WEB 应用的开发体验和运行效率。</p>
+<h3 id="源码"><a class="header" href="#源码">源码</a></h3>
+<p>本文涉及源码在 Github 上：</p>
+<ul>
+<li>Next.js 项目：<a href="https://github.com/yangbajing/books/tree/main/codes/nextjs-getting">https://github.com/yangbajing/books/tree/main/codes/nextjs-getting</a></li>
+<li>gRPC 服务：<a href="https://github.com/yangbajing/books/tree/main/codes/tonic-getting">https://github.com/yangbajing/books/tree/main/codes/tonic-getting</a></li>
+</ul>
 
                     </main>
 
