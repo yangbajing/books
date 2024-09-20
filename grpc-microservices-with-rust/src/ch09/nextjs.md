@@ -1,12 +1,12 @@
-# 在 Next.js 中整合 gRPC 和 gRPC-Web：构建高效的全栈应用
+# 在 Next.js 中整合 gRPC 和 gRPC-WEB：构建高效的全栈应用
 
-本文将介绍如何在 Next.js 应用中结合 Tonic 框架，实现 gRPC 和 gRPC-Web 的无缝集成。我们将详细介绍如何在服务端组件和 API 路由中使用 gRPC 与后端微服务通信，以及如何在客户端组件中利用 gRPC-Web 直接与后端服务交互。这种方法充分发挥了 Next.js 的服务端渲染能力和 gRPC 的高性能特性，同时保证了前后端的一致性和开发效率。
+本文将介绍如何在 Next.js 应用中结合 Tonic 框架，实现 gRPC 和 gRPC-WEB 的无缝集成。我们将详细介绍如何在服务端组件和 API 路由中使用 gRPC 与后端微服务通信，以及如何在客户端组件中利用 gRPC-WEB 直接与后端服务交互。这种方法充分发挥了 Next.js 的服务端渲染能力和 gRPC 的高性能特性，同时保证了前后端的一致性和开发效率。
 
-对于 gRPC 和 gRPC-Web 的介绍，可以参考 [gRPC 官方文档](https://grpc.io/docs/) 和 [gRPC-Web 官方文档](https://grpc.io/docs/web/)。
+对于 gRPC 和 gRPC-WEB 的介绍，可以参考 [gRPC 官方文档](https://grpc.io/docs/) 和 [gRPC-WEB 官方文档](https://grpc.io/docs/web/)。
 
 ## Next.js
 
-Next.js 是一个基于 React 的开源 JavaScript 框架，由 Vercel 公司开发维护。它为开发者提供了构建高性能、可扩展的 Web 应用的强大工具和优化策略。
+Next.js 是一个基于 React 的开源 JavaScript 框架，由 Vercel 公司开发维护。它为开发者提供了构建高性能、可扩展的 WEB 应用的强大工具和优化策略。
 
 ### Next.js 的核心特性
 
@@ -21,7 +21,7 @@ Next.js 是一个基于 React 的开源 JavaScript 框架，由 Vercel 公司开
 9. **国际化支持**：简化了多语言网站的开发流程。
 10. **零配置**：提供开箱即用的开发体验，无需复杂的配置。
 
-Next.js 的这些特性使其成为构建现代 Web 应用的理想选择，特别适合需要兼顾性能、可扩展性和开发效率的项目。接下来让我们创建一个 Next.js 项目，并添加 gRPC 依赖。使用下面的命令创建 Next.js 项目。
+Next.js 的这些特性使其成为构建现代 WEB 应用的理想选择，特别适合需要兼顾性能、可扩展性和开发效率的项目。接下来让我们创建一个 Next.js 项目，并添加 gRPC 依赖。使用下面的命令创建 Next.js 项目。
 
 ```sh
 pnpm dlx create-next-app@latest nextjs-getting
@@ -39,7 +39,7 @@ pnpm dlx create-next-app@latest nextjs-getting
 
 - 使用 Typescript 编写
 - 提供了 Promise 和 Async Iterables 进行流式传输的现代 API
-- 支持使用 [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) 取消正在进行的传播
+- 支持使用 [`AbortSignal`](https://developer.mozilla.org/en-US/docs/WEB/API/AbortSignal) 取消正在进行的传播
 - 通过使用同步生成器的简洁应用程序接口支持客户端和服务器中间件
 
 ## 使用服务端组件访问 gRPC 微服务
@@ -209,19 +209,19 @@ export const userClient: Client<UserDefinition> = clientFactory.create(UserDefin
 
 ## 小结
 
-本文介绍了如何在 Next.js 应用中集成 gRPC 和 gRPC-Web，实现了高效的全栈应用架构。通过这种集成，我们充分利用了 Next.js 的服务端渲染能力和 gRPC 的高性能特性，同时保证了前后端的一致性和开发效率。
+本文介绍了如何在 Next.js 应用中集成 gRPC 和 gRPC-WEB，实现了高效的全栈应用架构。通过这种集成，我们充分利用了 Next.js 的服务端渲染能力和 gRPC 的高性能特性，同时保证了前后端的一致性和开发效率。
 
 ### 技术栈的优势
 
 1. **性能优化**：gRPC 的高效二进制传输协议和 Next.js 的服务端渲染结合，大大提升了应用的性能。
 2. **开发效率**：使用 `nice-grpc` 和 `nice-grpc-web` 简化了 gRPC 的使用，提高了开发效率。
 3. **类型安全**：通过 `protobuf` 生成的 `TypeScript` 代码，确保了前后端接口的类型一致性。
-4. **灵活性**：Next.js 的服务端组件和客户端组件分别使用 gRPC 和 gRPC-Web，提供了更灵活的架构选择。
+4. **灵活性**：Next.js 的服务端组件和客户端组件分别使用 gRPC 和 gRPC-WEB，提供了更灵活的架构选择。
 
 ### 局限性
 
 1. **学习曲线**：开发者需要同时掌握 Next.js、gRPC 和 protobuf，可能存在一定的学习成本。
-2. **浏览器兼容性**：gRPC-Web 可能在一些旧版浏览器中不被支持，需要考虑兼容性问题。（*现代浏览器基本都支持，当前这一问题不大*）
+2. **浏览器兼容性**：gRPC-WEB 可能在一些旧版浏览器中不被支持，需要考虑兼容性问题。（*现代浏览器基本都支持，当前这一问题不大*）
 
 ### 未来展望和改进方向
 
@@ -231,6 +231,6 @@ export const userClient: Client<UserDefinition> = clientFactory.create(UserDefin
 4. **监控和日志**：集成专门的 gRPC 监控和日志工具，提高应用的可观测性。
 5. **跨平台支持**：探索将此架构扩展到移动应用开发，实现真正的全平台统一接口。
 
-通过本文的实践，我们展示了 Next.js 与 gRPC 的强大组合。这种架构不仅适用于小型项目，也能很好地扩展到大型、复杂的企业级应用。随着技术的不断发展，我们期待看到更多创新的集成方式，进一步提升 Web 应用的开发体验和运行效率。
+通过本文的实践，我们展示了 Next.js 与 gRPC 的强大组合。这种架构不仅适用于小型项目，也能很好地扩展到大型、复杂的企业级应用。随着技术的不断发展，我们期待看到更多创新的集成方式，进一步提升 WEB 应用的开发体验和运行效率。
 
 
