@@ -55,6 +55,9 @@
 
 # Part 3. 更进一步
 
+- [gRPC 生态](./ch09/index.md)
+  - [结合 Next.js](./ch09/nextjs.md)
+  - [总结]()
 - [可观测性](./ch09/index.md)
   - [日志](./ch09/logging.md)
   - [指标](./ch09/metrics.md)
