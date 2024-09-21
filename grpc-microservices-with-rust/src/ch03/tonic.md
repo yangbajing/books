@@ -263,7 +263,7 @@ mod tests {
 
 ```sh
 error[E0433]: failed to resolve: could not find `common` in `super`
-   --> /Users/yangjing/workspaces/books/codes/tonic-getting/target/debug/build/tonic-getting-caf65bf194fbeca1/out/getting.v1.rs:409:51
+   --> /Users/yangjing/workspaces/grpc-microservices-with-rust/tonic-getting/target/debug/build/tonic-getting-caf65bf194fbeca1/out/getting.v1.rs:409:51
     |
 409 |     pub pagination: ::core::option::Option<super::common::Pagination>,
     |                                                   ^^^^^^ could not find `common` in `super`
