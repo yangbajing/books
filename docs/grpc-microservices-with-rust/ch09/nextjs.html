@@ -177,7 +177,7 @@
                     <main>
                         <h1 id="在-nextjs-中整合-grpc-和-grpc-web构建高效的全栈应用"><a class="header" href="#在-nextjs-中整合-grpc-和-grpc-web构建高效的全栈应用">在 Next.js 中整合 gRPC 和 gRPC-WEB：构建高效的全栈应用</a></h1>
 <p>本文将介绍如何在 Next.js 应用中结合 Tonic 框架，实现 gRPC 和 gRPC-WEB 的无缝集成。我们将详细介绍如何在服务端组件和 API 路由中使用 gRPC 与后端微服务通信，以及如何在客户端组件中利用 gRPC-WEB 直接与后端服务交互。这种方法充分发挥了 Next.js 的服务端渲染能力和 gRPC 的高性能特性，同时保证了前后端的一致性和开发效率。</p>
-<p>对于 gRPC 和 gRPC-WEB 的介绍，可以参考 <a href="https://grpc.io/docs/">gRPC 官方文档</a> 和 <a href="https://grpc.io/docs/web/">gRPC-WEB 官方文档</a>。</p>
+<p>对于 gRPC 和 gRPC-WEB 的介绍，可以参考 <a href="https://grpc.io/docs/">gRPC 官方文档</a> 和 <a href="https://grpc.io/docs/platforms/web/">gRPC-WEB 官方文档</a>。</p>
 <h2 id="nextjs"><a class="header" href="#nextjs">Next.js</a></h2>
 <p>Next.js 是一个基于 React 的开源 JavaScript 框架，由 Vercel 公司开发维护。它为开发者提供了构建高性能、可扩展的 WEB 应用的强大工具和优化策略。</p>
 <h3 id="nextjs-的核心特性"><a class="header" href="#nextjs-的核心特性">Next.js 的核心特性</a></h3>
@@ -196,13 +196,13 @@
 <p>Next.js 的这些特性使其成为构建现代 WEB 应用的理想选择，特别适合需要兼顾性能、可扩展性和开发效率的项目。接下来让我们创建一个 Next.js 项目，并添加 gRPC 依赖。使用下面的命令创建 Next.js 项目。</p>
 <pre><code class="language-sh">pnpm dlx create-next-app@latest nextjs-getting
 </code></pre>
-<p>除 <code>Would you like to customize the default import alias (@/*)?*</code> 选择 <code>No</code>，其它都选择 <code>Yes</code>。</p>
+<p>上面命令将创建一个名为 <code>nextjs-getting</code> 的 Next.js 项目。除 <code>Would you like to customize the default import alias (@/*)?*</code> 选择 <code>No</code>，其它都选择 <code>Yes</code>。</p>
 <blockquote>
 <p>也许你还没有安装 <code>pnpm</code>，可以参考 <a href="https://pnpm.io/zh/installation">pnpm 安装文档</a> 或直接 <code>npm install -g pnpm</code> 进行安装。</p>
 </blockquote>
-<p>进入 <code>nextjs-getting</code> 目录，使用 <code>pnpm dev</code> 启动项目，在浏览器中访问 <code>http://localhost:3000</code>，可以看到 Next.js 的默认首页（使用 pnpm 初始化项目时已经安装了相关依赖）。</p>
-<h2 id="使用-nice-grpc"><a class="header" href="#使用-nice-grpc">使用 nice-grpc</a></h2>
-<p><a href="https://github.com/deeplay-io/nice-grpc">nice-grpc</a> 是一个对用户友好的 gRPC 框架，支持 node.js 和浏览器环境（使用 grpc-web）运行。</p>
+<p>因为在使用 pnpm 初始化项目时已经安装了相关依赖，所以进入 <code>nextjs-getting</code> 目录后可以直接使用 <code>pnpm dev</code> 启动项目。打开浏览器中访问 <code>http://localhost:3000</code>，就可以看到 Next.js 的默认首页。</p>
+<h3 id="nice-grpc"><a class="header" href="#nice-grpc">nice-grpc</a></h3>
+<p><a href="https://github.com/deeplay-io/nice-grpc">nice-grpc</a> 是一个对用户友好的 gRPC 框架，支持 node.js（支持 gRPC 服务端和客户端）和浏览器环境（客户端，使用 grpc-web）运行。它具有以下特性：</p>
 <ul>
 <li>使用 Typescript 编写</li>
 <li>提供了 Promise 和 Async Iterables 进行流式传输的现代 API</li>
@@ -211,10 +211,11 @@
 </ul>
 <h2 id="使用服务端组件访问-grpc-微服务"><a class="header" href="#使用服务端组件访问-grpc-微服务">使用服务端组件访问 gRPC 微服务</a></h2>
 <p>添加以下依赖到项目中：</p>
-<pre><code class="language-sh">pnpm add nice-grpc protobufjs long
+<pre><code class="language-sh">pnpm add nice-grpc protobufjs long @bufbuild/protobuf nice-grpc-common
 pnpm add -D grpc-tools ts-proto
 </code></pre>
-<p>继续使用之前 <a href="https://github.com/yangbajing/books/tree/main/codes/tonic-getting"><code>tonic-getting</code></a> 项目中的 <code>proto</code> 文件，复制 <code>tonic-getting</code> 项目的 <code>proto</code> 目录到 <code>nextjs-getting</code> 项目根目录中。然后创建 <code>generate-proto.sh</code> 生成脚本，内容如下：</p>
+<p><code>nice-grpc</code> 使用 <code>protobufjs</code> 和 <code>long</code> 库来处理 protobuf 编码和解码，<code>long</code> 库用于处理大整数。<code>grpc-tools</code> 和 <code>ts-proto</code> 用于生成 protobuf/gRPC 存根的 TypeScript 代码，所以使用 <code>-D</code> 参数添加到开发依赖。</p>
+<p>继续使用之前 <a href="https://github.com/yangbajing/grpc-microservices-with-rust/tree/main/tonic-getting"><code>tonic-getting</code></a> 项目中的 <code>proto</code> 文件，复制 <code>tonic-getting</code> 项目的 <code>proto</code> 目录到 <code>nextjs-getting</code> 项目根目录中。然后创建 <code>generate-proto.sh</code> 脚本以编译并生成 TypeScript 代码，内容如下：</p>
 <pre><code class="language-sh">PROTO_DIR="./proto"
 OUT_DIR="./src/pb"
 
@@ -230,12 +231,13 @@ protoc \
     ${PROTO_DIR}/getting/common/*.proto \
     ${PROTO_DIR}/getting/v1/*.proto
 </code></pre>
+<p>运行 <code>./generate-proto.sh</code> 生成 TypeScript 代码，代码将输出到 <code>OUT_DIR</code> 指定的 <code>./src/pb</code> 目录中。后续若 proto 文件有更新，只需再次运行脚本即可。将代码生成到 <code>src/pb</code> 目录中，将 protobuf 生成的代码统一放置到 <code>pb</code> 目录中是一个好的实践，在 Rust 后端项目中也是将生成的代码引入到 <code>pb</code> mod 中。</p>
+<p><code>-I</code> 指定包含输入 .proto 文件的根目录，相应的每一个 .proto 文件都会在 <code>-I</code> 指定的目录中查找，这里可以通过 <code>*</code> 通配符指定需要编译的 proto 文件（<em>注：protoc 不支持 <code>**</code> 通配符</em>）。<code>--ts_proto_opt=outputServices=nice-grpc,outputServices=generic-definitions,useExactTypes=false</code> 指定输出服务类型为 <code>nice-grpc</code>，并生成通用定义。</p>
 <blockquote>
 <p>Windows 下执行脚本在代码仓库可以找到。</p>
 </blockquote>
-<p>运行 <code>./generate-proto.sh</code> 生成 TypeScript 代码，代码将输出到 <code>./src/pb</code> 目录中。后续若 proto 文件有更新，只需再次运行脚本即可。</p>
 <h3 id="创建-grpc-客户端"><a class="header" href="#创建-grpc-客户端">创建 gRPC 客户端</a></h3>
-<p>创建 gRPC 客户端前，先启动后端服务（代码见：<a href="https://github.com/yangbajing/books/tree/main/codes/tonic-getting">tonic-getting</a>）。使用 <code>cargo run</code> 启动 <code>tonic-getting</code> 项目中的后端服务。</p>
+<p>创建 gRPC 客户端前，先启动后端服务（代码见：<a href="https://github.com/yangbajing/grpc-microservices-with-rust/tree/main/tonic-getting">tonic-getting</a>）。使用 <code>RUST_LOG="tower_http=debug" cargo run</code> 启动 <code>tonic-getting</code> 项目中的后端服务。</p>
 <h4 id="srclibgrpcts"><a class="header" href="#srclibgrpcts">src/lib/grpc.ts</a></h4>
 <p>创建 grpc 客户端，新建 <code>src/lib/grpc.ts</code> 文件，输入以下代码：</p>
 <pre><code class="language-typescript">import { createChannel, createClient } from "nice-grpc";
@@ -244,6 +246,8 @@ import { AuthClient, AuthDefinition } from "@/pb/getting/v1/auth";
 export const channel = createChannel("localhost:9999");
 export const authClient: AuthClient = createClient(AuthDefinition, channel);
 </code></pre>
+<p><code>createChannel</code> 函数创建一个 gRPC 通道，连接到后端服务的 gRPC 服务地址 <code>localhost:9999</code>。因为未指定服务地址的连接协议，默认将以 <code>Inscure</code>（不启用 ssl）方式进行连接，若要使用 ssl 连接后端服务，请使用 <code>https://</code> 协议。</p>
+<p><code>createClient</code> 函数创建一个 gRPC 客户端，并返回一个 <code>AuthClient</code> 对象，用于调用 gRPC 服务。<code>AuthDefinition</code> 是 <code>Auth</code> 服务的定义，若有其它 gRPC 服务，如 <code>User</code> 服务，可以传入 <code>UserDefinition</code> 对象来创建 <code>UserClient</code>。</p>
 <h4 id="srcactionssignts"><a class="header" href="#srcactionssignts">src/actions/sign.ts</a></h4>
 <p>创建用于 Next.js 服务端组件的 Action 函数，新建 <code>src/actions/sign.ts</code> 文件，输入以下代码：</p>
 <pre><code class="language-typescript">"use server";
@@ -298,7 +302,8 @@ export default function Signin() {
   );
 }
 </code></pre>
-<p><em>使用了 shadcn UI 库，完整代码见：<a href="https://github.com/yangbajing/books/blob/main/codes/nextjs-getting/src/app/signin/page.tsx">yangbajing/books/blob/main/codes/nextjs-getting/src/app/signin/page.tsx</a></em></p>
+<p><em>使用了 shadcn UI 库，完整代码见：<a href="https://github.com/yangbajing/grpc-microservices-with-rust/blob/main/nextjs-getting/src/app/signin/page.tsx">yangbajing/grpc-microservices-with-rust/blob/main/nextjs-getting/src/app/signin/page.tsx</a></em></p>
+<p><img src="./imgs/signin-page.png" alt="Signin Page" /></p>
 <p>打开浏览器，访问 <code>http://localhost:3000/signin</code>，可以看到登录页面。输入邮箱、密码，点击登录按钮，可以在终端看到登录成功的信息（next.js），以及在 gRPC 后端服务中看到登录日志打印。</p>
 <p>Next.js 终端输出：</p>
 <pre><code class="language-sh">登录成功: {
@@ -323,6 +328,11 @@ export default function Signin() {
   },
 };
 </code></pre>
+<p>对 <code>source</code> 的访问都会被重写到 <code>destination</code> 的地址。<code>:services</code> 和 <code>:paths*</code> 是匹配的占位符，分别表示 gRPC 服务名称和路径参数，<code>*</code> 表示匹配任意数量的字符（包括路径中的参数）。比如：</p>
+<ul>
+<li>访问 <code>http://localhost:3000/getting.v1.User/Get</code> 会被重写到 <code>http://localhost:9999/getting.v1.User/Get</code></li>
+<li>访问 <code>http://localhost:3000/getting.v1.User/Update</code> 会被重写到 <code>http://localhost:9999/getting.v1.User/Update</code></li>
+</ul>
 <p>创建 <code>lib/grpc-web.ts</code> 文件，添加以下代码：</p>
 <pre><code class="language-typescript">import { Channel, Client, ClientFactory, createChannel, createClientFactory, Metadata } from "nice-grpc-web";
 import { UserDefinition } from "@/pb/getting/v1/user";
@@ -347,35 +357,23 @@ export const userClient: Client&lt;UserDefinition&gt; = clientFactory.create(Use
 <p>本文介绍了如何在 Next.js 应用中集成 gRPC 和 gRPC-WEB，实现了高效的全栈应用架构。通过这种集成，我们充分利用了 Next.js 的服务端渲染能力和 gRPC 的高性能特性，同时保证了前后端的一致性和开发效率。</p>
 <h3 id="技术栈的优势"><a class="header" href="#技术栈的优势">技术栈的优势</a></h3>
 <ol>
+<li><strong>稳定的API协议</strong>：protobuf 提供的兼容性保证对于后端服务和前端应用的版本迭代非常有用。Next.js 的服务端组件和客户端组件分别使用 gRPC 和 gRPC-WEB，提供了更灵活的架构选择。</li>
 <li><strong>性能优化</strong>：gRPC 的高效二进制传输协议和 Next.js 的服务端渲染结合，大大提升了应用的性能。</li>
 <li><strong>开发效率</strong>：使用 <code>nice-grpc</code> 和 <code>nice-grpc-web</code> 简化了 gRPC 的使用，提高了开发效率。</li>
 <li><strong>类型安全</strong>：通过 <code>protobuf</code> 生成的 <code>TypeScript</code> 代码，确保了前后端接口的类型一致性。</li>
-<li><strong>灵活性</strong>：Next.js 的服务端组件和客户端组件分别使用 gRPC 和 gRPC-WEB，提供了更灵活的架构选择。</li>
 </ol>
 <h4 id="bffbackends-for-frontends"><a class="header" href="#bffbackends-for-frontends">BFF（Backends For Frontends）</a></h4>
-<p>BFF（Backends For Frontends）是一种先进的 Web 架构模式，最初由 Sam Newman 在其文章 <a href="https://samnewman.io/patterns/architectural/bff/">Pattern: Backend for Frontends</a> 中提出。这种架构通过在前端和后端之间引入一个专门的中间层，有效地优化了前后端分离，显著提升了开发效率和系统性能。</p>
-<p>在现代 Web 开发中，Next.js（以及类似的 Nuxt.js）等框架凭借其强大的服务端渲染（SSR）和静态站点生成（SSG）能力，为 BFF 的实现提供了理想的技术基础。这些框架内置的服务端功能，如 API 路由和服务端组件，为与后端服务的无缝集成开辟了新的可能性。相比传统的 BFF 实现方式（如使用 Spring Gateway 或 Nginx 反向代理进行 API 聚合），Next.js 的服务端特性为 BFF 架构提供了更为自然和高效的解决方案。</p>
-<p>这种架构模式为后端开发带来了显著优势，使其能够更加专注于核心业务逻辑的实现。BFF 层有效地隔离了前端展示需求和多端适配的复杂性，简化了后端服务的设计。同时，对前端开发人员而言，采用 Next.js 实现 BFF 功能赋予了他们更大的数据处理自主权。这不仅提高了前端开发的灵活性，还使得数据获取和处理过程更加高效和可控。</p>
+<p>BFF 是一种先进的 Web 架构模式，最初由 Sam Newman 在其文章 <a href="https://samnewman.io/patterns/architectural/bff/">Pattern: Backend for Frontends</a> 中提出。这种架构通过在前端和后端之间引入一个专门的中间层，有效地优化了前后端分离，可以显著提升开发效率和系统性能。</p>
+<p>在现代 Web 开发中，Next.js（以及类似的 Nuxt.js）等框架凭借其强大的服务端渲染（SSR）和静态站点生成（SSG）能力，为 BFF 的实现提供了理想的技术基础。这些框架内置的服务端功能，如 API 路由和服务端组件，也为与后端服务的无缝集成开辟了新的可行性。相比传统的 BFF 实现方式（如使用 Spring Gateway 或 Nginx 反向代理进行 API 聚合），Next.js 的服务端特性为 BFF 架构提供了更为自然和高效的解决方案。</p>
+<p>这种架构模式为后端开发带来了显著优势，使其能够更加专注于核心业务逻辑的实现，后端服务可以提供更稳定和细粒度的 API，避免因为展示需要而造成的 API 冗余。对于不同端或不同业务的数据融合和关联可以由 BFF 来实现。BFF 层有效地隔离了前端展示需求和多端适配的复杂性，简化了后端服务的设计。同时，对前端开发人员而言，采用 Next.js 实现 BFF 功能赋予了他们更大的数据处理自主权。这不仅提高了前端开发的灵活性，还使得数据获取和处理过程更加高效和可控。</p>
 <p>BFF 模式结合 Next.js 等现代框架，代表了 Web 开发的一个重要发展方向，为构建高性能、可维护的大规模 Web 应用提供了强有力的技术支持。</p>
-<h3 id="局限性"><a class="header" href="#局限性">局限性</a></h3>
-<ol>
-<li><strong>学习曲线</strong>：开发者需要同时掌握 Next.js、gRPC 和 protobuf，可能存在一定的学习成本。</li>
-<li><strong>浏览器兼容性</strong>：gRPC-WEB 可能在一些旧版浏览器中不被支持，需要考虑兼容性问题。（<em>现代浏览器基本都支持，当前这一问题不大</em>）</li>
-</ol>
-<h3 id="未来展望和改进方向"><a class="header" href="#未来展望和改进方向">未来展望和改进方向</a></h3>
-<ol>
-<li><strong>自动化工具</strong>：开发更智能的代码生成工具，进一步简化 gRPC 和 Next.js 的集成过程。</li>
-<li><strong>性能优化</strong>：探索 gRPC 流式传输在 Next.js 中的应用，以支持更高效的实时数据交互。</li>
-<li><strong>安全性增强</strong>：实现更完善的身份认证和授权机制，确保 gRPC 调用的安全性。</li>
-<li><strong>监控和日志</strong>：集成专门的 gRPC 监控和日志工具，提高应用的可观测性。</li>
-<li><strong>跨平台支持</strong>：探索将此架构扩展到移动应用开发，实现真正的全平台统一接口。</li>
-</ol>
-<p>通过本文的实践，我们展示了 Next.js 与 gRPC 的强大组合。这种架构不仅适用于小型项目，也能很好地扩展到大型、复杂的企业级应用。随着技术的不断发展，我们期待看到更多创新的集成方式，进一步提升 WEB 应用的开发体验和运行效率。</p>
+<hr />
+<p>通过本文的实践，我们展示了 Next.js 与 gRPC 的强大组合。这种架构不仅适用于小型项目，也能很好地扩展到大型、复杂的企业级应用。</p>
 <h3 id="源码"><a class="header" href="#源码">源码</a></h3>
-<p>本文涉及源码在 Github 上：</p>
+<p>本文涉及源码可以在以下地址获取：</p>
 <ul>
-<li>Next.js 项目：<a href="https://github.com/yangbajing/books/tree/main/codes/nextjs-getting">https://github.com/yangbajing/books/tree/main/codes/nextjs-getting</a></li>
-<li>gRPC 服务：<a href="https://github.com/yangbajing/books/tree/main/codes/tonic-getting">https://github.com/yangbajing/books/tree/main/codes/tonic-getting</a></li>
+<li>Next.js 项目：<a href="https://github.com/yangbajing/grpc-microservices-with-rust/tree/main/nextjs-getting">https://github.com/yangbajing/grpc-microservices-with-rust/tree/main/nextjs-getting</a></li>
+<li>gRPC 服务：<a href="https://github.com/yangbajing/grpc-microservices-with-rust/tree/main/tonic-getting">https://github.com/yangbajing/grpc-microservices-with-rust/tree/main/tonic-getting</a></li>
 </ul>
 
                     </main>

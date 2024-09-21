@@ -384,7 +384,7 @@ mod tests {
 <span class="boring">}</span></code></pre></pre>
 <p>并通过 <code>cargo test pb::tests -q</code> 命令运行测试，这时会输出编译错误：</p>
 <pre><code class="language-sh">error[E0433]: failed to resolve: could not find `common` in `super`
-   --&gt; /Users/yangjing/workspaces/books/codes/tonic-getting/target/debug/build/tonic-getting-caf65bf194fbeca1/out/getting.v1.rs:409:51
+   --&gt; /Users/yangjing/workspaces/grpc-microservices-with-rust/tonic-getting/target/debug/build/tonic-getting-caf65bf194fbeca1/out/getting.v1.rs:409:51
     |
 409 |     pub pagination: ::core::option::Option&lt;super::common::Pagination&gt;,
     |                                                   ^^^^^^ could not find `common` in `super`
