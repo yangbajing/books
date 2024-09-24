@@ -4,4 +4,4 @@ REST（Representational State Transfer）是一种广泛采用的微服务协议
 
 由于 gRPC 内置了对 HTTP 2 的支持，您还可以在客户端和服务器之间使用单向和双向流，从而实现高速通信。使用 REST 服务的默认设置，多个客户端与服务器之间的通信可能会导致整体系统性能的延迟。
 
-在某些情况下，REST 比 gRPC 更有利。例如，REST 协议在各种浏览器中都得到支持。由于 gRPC 的支持较少，您可能需要使用代理层，例如 [gRPC Web](https://github.com/grpc/grpc-web)，以便轻松与 gRPC 服务器进行通信。Tonic 提供了 gRPC Web 支持（可以在 [tonic-web](https://github.com/hyperium/tonic/tree/master/tonic-web)了解更多信息），它允许你在一个服务中同时暴露 gRPC 服务端点和 REST 端点，这样就允许你省去部署一个单独的 grpcwebproxy 的开销。
+在某些情况下，REST 比 gRPC 更有利。例如，REST 协议在各种浏览器中都得到支持。由于 gRPC 的支持较少，您可能需要使用代理层，例如 [gRPC Web](https://github.com/grpc/gRPC-Web)，以便轻松与 gRPC 服务器进行通信。Tonic 提供了 gRPC Web 支持（可以在 [tonic-web](https://github.com/hyperium/tonic/tree/master/tonic-web)了解更多信息），它允许你在一个服务中同时暴露 gRPC 服务端点和 REST 端点，这样就允许你省去部署一个单独的 grpcwebproxy 的开销。

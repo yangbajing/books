@@ -1,12 +1,12 @@
-# 在 Next.js 中整合 gRPC 和 gRPC-WEB：构建高效的全栈应用
+# 在 Next.js 中整合 gRPC 和 gRPC-Web：构建高效的全栈应用
 
-本文将介绍如何在 Next.js 应用中结合 Tonic 框架，实现 gRPC 和 gRPC-WEB 的无缝集成。我们将详细介绍如何在服务端组件和 API 路由中使用 gRPC 与后端微服务通信，以及如何在客户端组件中利用 gRPC-WEB 直接与后端服务交互。这种方法充分发挥了 Next.js 的服务端渲染能力和 gRPC 的高性能特性，同时保证了前后端的一致性和开发效率。
+本文将介绍如何在 Next.js 应用中结合 Tonic 框架，实现 gRPC 和 gRPC-Web 的无缝集成。我们将详细介绍如何在服务端组件和 API 路由中使用 gRPC 与后端微服务通信，以及如何在客户端组件中利用 gRPC-Web 直接与后端服务交互。这种方法充分发挥了 Next.js 的服务端渲染能力和 gRPC 的高性能特性，同时保证了前后端的一致性和开发效率。
 
-对于 gRPC 和 gRPC-WEB 的介绍，可以参考 [gRPC 官方文档](https://grpc.io/docs/) 和 [gRPC-WEB 官方文档](https://grpc.io/docs/platforms/web/)。
+对于 gRPC 和 gRPC-Web 的介绍，可以参考 [gRPC 官方文档](https://grpc.io/docs/) 和 [gRPC-Web 官方文档](https://grpc.io/docs/platforms/web/)。
 
 ## Next.js
 
-Next.js 是一个基于 React 的开源 JavaScript 框架，由 Vercel 公司开发维护。它为开发者提供了构建高性能、可扩展的 WEB 应用的强大工具和优化策略。
+Next.js 是一个基于 React 的开源 JavaScript 框架，由 Vercel 公司开发维护。它为开发者提供了构建高性能、可扩展的 Web 应用的强大工具和优化策略。
 
 ### Next.js 的核心特性
 
@@ -21,7 +21,7 @@ Next.js 是一个基于 React 的开源 JavaScript 框架，由 Vercel 公司开
 9. **国际化支持**：简化了多语言网站的开发流程。
 10. **零配置**：提供开箱即用的开发体验，无需复杂的配置。
 
-Next.js 的这些特性使其成为构建现代 WEB 应用的理想选择，特别适合需要兼顾性能、可扩展性和开发效率的项目。接下来让我们创建一个 Next.js 项目，并添加 gRPC 依赖。使用下面的命令创建 Next.js 项目。
+Next.js 的这些特性使其成为构建现代 Web 应用的理想选择，特别适合需要兼顾性能、可扩展性和开发效率的项目。接下来让我们创建一个 Next.js 项目，并添加 gRPC 依赖。使用下面的命令创建 Next.js 项目。
 
 ```sh
 pnpm dlx create-next-app@latest nextjs-getting
@@ -35,11 +35,11 @@ pnpm dlx create-next-app@latest nextjs-getting
 
 ### nice-grpc
 
-[nice-grpc](https://github.com/deeplay-io/nice-grpc) 是一个对用户友好的 gRPC 框架，支持 node.js（支持 gRPC 服务端和客户端）和浏览器环境（客户端，使用 grpc-web）运行。它具有以下特性：
+[nice-grpc](https://github.com/deeplay-io/nice-grpc) 是一个对用户友好的 gRPC 框架，支持 node.js（支持 gRPC 服务端和客户端）和浏览器环境（客户端，使用 gRPC-Web）运行。它具有以下特性：
 
 - 使用 Typescript 编写
 - 提供了 Promise 和 Async Iterables 进行流式传输的现代 API
-- 支持使用 [`AbortSignal`](https://developer.mozilla.org/en-US/docs/WEB/API/AbortSignal) 取消正在进行的传播
+- 支持使用 [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) 取消正在进行的传播
 - 通过使用同步生成器的简洁应用程序接口支持客户端和服务器中间件
 
 ## 使用服务端组件访问 gRPC 微服务
@@ -176,15 +176,15 @@ Next.js 终端输出：
 令牌类型: TOKEN_TYPE_BEARER
 ```
 
-## 使用客户端组件访问 gRPC-WEB API
+## 使用客户端组件访问 gRPC-Web API
 
-添加 `grpc-web` 依赖：
+添加 `gRPC-Web` 依赖：
 
 ```sh
-pnpm add nice-grpc-web
+pnpm add nice-gRPC-Web
 ```
 
-配置 `next.config.js` 文件，添加对 `grpc-web` 地址的 **rewrites** 规则：
+配置 `next.config.js` 文件，添加对 `gRPC-Web` 地址的 **rewrites** 规则：
 
 ```typescript
 module.exports = {
@@ -204,10 +204,10 @@ module.exports = {
 - 访问 `http://localhost:3000/getting.v1.User/Get` 会被重写到 `http://localhost:9999/getting.v1.User/Get`
 - 访问 `http://localhost:3000/getting.v1.User/Update` 会被重写到 `http://localhost:9999/getting.v1.User/Update`
 
-创建 `lib/grpc-web.ts` 文件，添加以下代码：
+创建 `lib/gRPC-Web.ts` 文件，添加以下代码：
 
 ```typescript
-import { Channel, Client, ClientFactory, createChannel, createClientFactory, Metadata } from "nice-grpc-web";
+import { Channel, Client, ClientFactory, createChannel, createClientFactory, Metadata } from "nice-gRPC-Web";
 import { UserDefinition } from "@/pb/getting/v1/user";
 
 const clientFactory: ClientFactory = createClientFactory().use((call, options) => {
@@ -222,25 +222,25 @@ export const channel: Channel = createChannel("");
 export const userClient: Client<UserDefinition> = clientFactory.create(UserDefinition, channel);
 ```
 
-这里从 `nice-grpc-web` 导入 `Channel`、`Client`、……`Metadata` 类型和函数，创建 `clientFactory` 和 `channel`，然后使用 `clientFactory.create` 方法创建 `userClient`。
+这里从 `nice-gRPC-Web` 导入 `Channel`、`Client`、……`Metadata` 类型和函数，创建 `clientFactory` 和 `channel`，然后使用 `clientFactory.create` 方法创建 `userClient`。
 
-在 `clientFactory` 中，我们创建一个 `Metadata` 对象，并设置 `Authorization` HTTP 头，值为 `Bearer` 加上从后端服务获取的令牌。这样在每次调用 gRPC-WEB API 时，都会自动添加令牌。
+在 `clientFactory` 中，我们创建一个 `Metadata` 对象，并设置 `Authorization` HTTP 头，值为 `Bearer` 加上从后端服务获取的令牌。这样在每次调用 gRPC-Web API 时，都会自动添加令牌。
 
-在使用 `clientChannel` 时，我们将其设置为空字符串，这样它将使用从浏览器中获取的 URL 地址。gRPC-WEB 在访问后端 API 时，会应用 `rewrites` 规则 `/getting.v1.User/Get` ，并由 Next.js 服务将请求代理到后端 `http://localhost:9999/getting.v1.User/Get` 地址。
+在使用 `clientChannel` 时，我们将其设置为空字符串，这样它将使用从浏览器中获取的 URL 地址。gRPC-Web 在访问后端 API 时，会应用 `rewrites` 规则 `/getting.v1.User/Get` ，并由 Next.js 服务将请求代理到后端 `http://localhost:9999/getting.v1.User/Get` 地址。
 
-![image](./imgs/grpc-web-chrome-network.png)
+![image](./imgs/gRPC-Web-chrome-network.png)
 
-打开 chrome 控制台点击 `Network` 标签查看 `getting.v1.User/Get` 请求。期 `Content-Type` 为 `application/grpc-web+proto`，也正确的设置了 `Authorization` 为 `Bearer` 类型。
+打开 chrome 控制台点击 `Network` 标签查看 `getting.v1.User/Get` 请求。期 `Content-Type` 为 `application/gRPC-Web+proto`，也正确的设置了 `Authorization` 为 `Bearer` 类型。
 
 ## 小结
 
-本文介绍了如何在 Next.js 应用中集成 gRPC 和 gRPC-WEB，实现了高效的全栈应用架构。通过这种集成，我们充分利用了 Next.js 的服务端渲染能力和 gRPC 的高性能特性，同时保证了前后端的一致性和开发效率。
+本文介绍了如何在 Next.js 应用中集成 gRPC 和 gRPC-Web，实现了高效的全栈应用架构。通过这种集成，我们充分利用了 Next.js 的服务端渲染能力和 gRPC 的高性能特性，同时保证了前后端的一致性和开发效率。
 
 ### 技术栈的优势
 
-1. **稳定的API协议**：protobuf 提供的兼容性保证对于后端服务和前端应用的版本迭代非常有用。Next.js 的服务端组件和客户端组件分别使用 gRPC 和 gRPC-WEB，提供了更灵活的架构选择。
+1. **稳定的API协议**：protobuf 提供的兼容性保证对于后端服务和前端应用的版本迭代非常有用。Next.js 的服务端组件和客户端组件分别使用 gRPC 和 gRPC-Web，提供了更灵活的架构选择。
 2. **性能优化**：gRPC 的高效二进制传输协议和 Next.js 的服务端渲染结合，大大提升了应用的性能。
-3. **开发效率**：使用 `nice-grpc` 和 `nice-grpc-web` 简化了 gRPC 的使用，提高了开发效率。
+3. **开发效率**：使用 `nice-grpc` 和 `nice-gRPC-Web` 简化了 gRPC 的使用，提高了开发效率。
 4. **类型安全**：通过 `protobuf` 生成的 `TypeScript` 代码，确保了前后端接口的类型一致性。
 
 #### BFF（Backends For Frontends）
