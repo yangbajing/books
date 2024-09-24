@@ -25,7 +25,7 @@
   - [使用 tonic](./ch03/tonic.md)
   - [拦截器和认证](./ch03/interceptor-authentication.md)
   - [维护 .proto 文件](./ch03/maintain-proto-file.md)
-  - [兼容性]()
+  - [proto3 兼容性](./ch03/proto3-compatibility.md)
   - [总结]()
 - [微服务项目设置]()
   - [六边型架构]()
