@@ -1,4 +1,4 @@
-# tonic-build 编译手册
+# 附录 B：tonic-build 编译手册
 
 前面章节已经简单介绍了 `tonic-build` 的使用，本节将深入 `tonic-build`，详细介绍在编译 .proto 文件时可提供的定制功能。
 
@@ -146,7 +146,33 @@ config.type_attribute("my_messages.MyMessageType.MyNestedMessageType",
                       "#[derive(Serialize)] #[serde(rename_all = \"snake_case\")]");
 ```
 
-由于 `oneof` 字段在 protobuf 中没有自己的类型名称，因此字段名称可以同时与 `type_attribute` 和 `field_attribute` 一起使用。一个放在 `enum` 类型定义之前，另一个放在相应消息 `struct` 中字段之前。
+由于 `oneof` 字段在 protobuf 中没有自己的类型名称，因此字段名称可以同时与 `type_attribute` 和 `field_attribute` 一起使用。一个放在 `enum` 类型定义之前，另一个放在相应消息 `struct` 中字段之前。比如如下 protobuf 定义：
+
+```protobuf
+message UpdateTriggerRequest {
+  string trigger_id = 1;
+  oneof schedule {
+    SimpleSchedule simple = 2;
+    CronSchedule cron = 3;
+  }
+}
+```
+
+设置 `config.type_attribute("v1.UpdateTriggerRequest.schedule", "#[derive(serde::Serialize, serde::Deserialize)]")` 后，生成的 Rust 代码如下：
+
+```rust
+/// `UpdateTriggerRequest` 中的嵌套 enum 和消息
+pub mod update_trigger_request {
+    #[derive(serde::Serialize, serde::Deserialize)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Schedule {
+        #[prost(message, tag = "2")]
+        Simple(super::SimpleSchedule),
+        #[prost(message, tag = "3")]
+        Cron(super::CronSchedule),
+    }
+}
+```
 
 #### `.message_attribute`
 

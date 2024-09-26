@@ -8,8 +8,7 @@ TODO 修改示例！
 curl -X "POST" \
       - H "Content-Type: application/json" \
       -d '{"name": "dev-cluster"}' \
-      ➥ http://localhost:8080/twirp/github.com/huseyinbabal/microservices-
-      ➥ proto/cluster/Create
+      http://localhost:8080/twirp/github.com/huseyinbabal/microservices-proto/cluster/Create
 ```
 
 多语言开发环境非常适合 gRPC 集成，因为在结账服务中使用 Python 客户端访问用 Java 编写的支付服务非常简单，客户端存根生成使这一过程变得容易。您可以对公共消费者的 SDK 生成应用相同的策略。此外，每当您更改服务定义时，客户端的测试会失败，这为您的微服务提供了合适的验证机制。
